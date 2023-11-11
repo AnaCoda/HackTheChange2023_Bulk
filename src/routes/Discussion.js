@@ -1,30 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RiArrowRightSLine, RiPencilLine } from 'react-icons/ri';
 
-const LandingPage = () => {
-  // Sample data for posts
-  const posts = [
-    {
-      id: 1,
-      title: 'Post 1',
-      description: 'This is the first post',
-      image: 'https://example.com/image1.jpg',
-    },
-    {
-      id: 2,
-      title: 'Post 2',
-      description: 'This is the second post',
-      image: 'https://example.com/image2.jpg',
-    },
-    // Add more posts here
-  ];
-
+const DiscussionsPage = () => {
+  const [posts, setPosts] = useState([]);
   const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
 
-  const filteredPosts = posts.filter((post) =>
-    post.title.toLowerCase().includes(searchText.toLowerCase()) ||
-    post.description.toLowerCase().includes(searchText.toLowerCase())
+  useEffect(() => {
+    // Fetch the posts data from the server
+    fetch('/posts')
+      .then((response) => response.json())
+      .then((data) => setPosts(data))
+      .catch((error) => console.log('Error:', error));
+  }, []);
+
+  const filteredPosts = posts.filter(
+    (post) =>
+      post.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      post.description.toLowerCase().includes(searchText.toLowerCase())
   );
 
   const handleSearchChange = (e) => {
@@ -35,29 +29,50 @@ const LandingPage = () => {
     navigate(`/post/${postId}`);
   };
 
+  const handleCreatePostClick = () => {
+    navigate(`/newPost`);
+  };
+
   return (
-    <div className="bg-gray-100 min-h-screen py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Welcome to the Reddit-like Page</h1>
+        <h1 className="text-3xl font-bold mb-1 text-green-600">Welcome to the Discussions Page</h1>
+        <i><p className='mb-8'> Find out what people are looking for 🕵️‍♂️, what is on sale 💸, and connect with the community 🤝</p></i>
         <div className="mb-4">
           <input
             type="text"
             placeholder="Search..."
             value={searchText}
             onChange={handleSearchChange}
-            className="border border-gray-300 rounded-md px-4 py-2 w-full"
+            className="border border-green-500 rounded-md px-4 py-2 w-full"
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:bg-green-100 flex items-center justify-center"
+            onClick={handleCreatePostClick}
+          >
+            <span className="text-green-500 mr-2">
+              <RiPencilLine />
+            </span>
+            <span className="text-green-500">Create Post</span>
+          </div>
+
           {filteredPosts.map((post) => (
             <div
               key={post.id}
-              className="bg-white rounded-lg shadow-md p-4 cursor-pointer"
+              className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:bg-green-100"
               onClick={() => handlePostClick(post.id)}
             >
-              <img src={post.image} alt={post.title} className="w-full h-40 object-cover mb-4 rounded-md" />
-              <h2 className="text-xl font-bold mb-2">{post.title}</h2>
-              <p className="text-gray-600">{post.description}</p>
+              <img src={post.imageURL} alt={post.title} className="w-full h-40 object-cover mb-4 rounded-md" />
+              <h2 className="text-xl font-bold mb-2 text-green-600">{post.title}</h2>
+              <p className="text-gray-600">{post.content}</p>
+              <div className="flex items-center mt-4">
+                <span className="text-green-500 mr-2">
+                  <RiArrowRightSLine />
+                </span>
+                <span className="text-green-500">Read More</span>
+              </div>
             </div>
           ))}
         </div>
@@ -66,4 +81,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default DiscussionsPage;

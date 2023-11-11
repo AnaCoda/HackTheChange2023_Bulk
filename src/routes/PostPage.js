@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { FaSpinner } from 'react-icons/fa';
 
 const PostPage = () => {
   const { id } = useParams();
+  const [post, setPost] = useState(null);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetch(`/post/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setPost(data);
+          setIsLoading(false);
+          console.log(data)
+        })
+        .catch((error) => console.error(error));
+    }, 0);
+  }, [id]);
 
   const handleCommentChange = (e) => {
     setComment(e.target.value);
@@ -18,15 +34,25 @@ const PostPage = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="bg-green-200 min-h-screen py-8 flex items-center justify-center">
+        <FaSpinner className="text-green-500 animate-spin text-4xl" />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-green-200 min-h-screen py-8">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-4">
-          <h1 className="text-3xl font-bold mb-4">Post Page</h1>
+          <h1 className="text-3xl font-bold mb-4">{post.post.title}</h1>
           <p className="text-gray-600">Post ID: {id}</p>
           <div className="mt-8">
-            <h2 className="text-xl font-bold mb-2">Post Title</h2>
-            <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc id aliquam tincidunt, nunc nunc lacinia nunc, id lacinia nunc nunc id nunc.</p>
+            <div className="flex justify-center">
+              <img src={post.post.imageURL} className='h-40 object-cover mb-4 rounded-md bg-center'></img>
+            </div>
+            <p className="mb-2 text-center">{post.post.content}</p>
           </div>
           <div className="mt-8">
             <h2 className="text-xl font-bold mb-2">Comments</h2>
