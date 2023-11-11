@@ -1,8 +1,10 @@
-import datetime
 from flask import current_app,jsonify,request
 from app import create_app,db
 from models import ItemForSale, Reservations, User, users_schema,user_schema, itemForSale_schema, itemsForSale_schema, reservation_schema, reservations_schema
 from eyewearSimilarity import *
+from datetime import datetime
+import random
+import base64
 
 # Create an application instance
 app = create_app()
@@ -30,29 +32,47 @@ def user():
 
 
 @app.route("/catalogPosts", methods=["GET"], strict_slashes=False)
-def eyewear():
-	items = ItemForSale.query.all()
-	for glass in items:
-		glassDict = glass.__dict__
-		print(glassDict)
-	if request.method == "GET":
-		items = ItemForSale.query.all()
-		
-		results = itemsForSale_schema.dump(items)
-		print(results)
-		print(jsonify(results))
-		return jsonify(results)
+def get_catalog_posts():
+    catalog_posts = ItemForSale.query.all()
+    return jsonify([{
+        "id": post.id,
+        "name": post.name,
+        "image": base64.b64encode(post.image).decode('utf-8'),
+        "price": post.price,
+        "amount": post.amount,
+        "receipt": base64.b64encode(post.receipt).decode('utf-8') if post.receipt else None,
+        "description": post.description,
+        "date_posted": post.date_posted,
+        "expiry_date": post.expiry_date,
+        "user_id": post.user_id
+    } for post in catalog_posts])
 
 @app.route("/uploadCatalogPost", methods=["POST"])
-def uploadGlasses():
-	# USER ID IS CURRENTLY HARDCODED
-	db.session.add(ItemForSale(name = request.form.get('name'), image=request.form.get('image'), price=float(request.form.get('price'))),
-				amount=int(request.form.get('amount'), receipt=request.form.get('receipt'), description=request.form.get('description')),
-				expiry_date=datetime.datetime(request.form.get('expiry'), user_id=0))
-	resp = jsonify(success=True)
-	db.session.commit()
-	return resp
+def uploadItem():
+    form_data = request.form
+    name = form_data.get('name')
+    image = request.files['foodPicture'].read()
+    price = float(form_data.get('price'))
+    amount = int(form_data.get('amount'))
+    receipt = request.files['receipt'].read()
+    description = ""
+    expiry_date = datetime.now()
 
+    # USER ID IS CURRENTLY HARDCODED
+    item = ItemForSale(
+        name=name,
+        image=image,
+        price=price,
+        amount=amount,
+        receipt=receipt,
+        description=description,
+        expiry_date=expiry_date,
+        user_id=random.randint(0,10000)
+    )
+    db.session.add(item)
+    db.session.commit()
+    resp = jsonify(success=True)
+    return resp
 	
 if __name__ == "__main__":
 	app.run(debug=True)

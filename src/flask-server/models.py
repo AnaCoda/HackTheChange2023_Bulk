@@ -4,11 +4,11 @@ from sqlalchemy import event
 
 class ItemForSale(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), primary_key=True)
-    image = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.LargeBinary, nullable=False)
     price = db.Column(db.Float, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
-    receipt = db.Column(db.String(100))
+    receipt = db.Column(db.LargeBinary)
     description = db.Column(db.Text, nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
     expiry_date = db.Column(db.DateTime, nullable=False)
@@ -48,10 +48,11 @@ class ReservationsShema(ma.Schema):
 
 @event.listens_for(ItemForSale.__table__, 'after_create')
 def create_eyewear(*args, **kwargs):
-    db.session.add(ItemForSale(id=1, name="Campbell's Cream Of Mushroom",
+    pass
+'''db.session.add(ItemForSale(id=1, name="Campbell's Cream Of Mushroom",
                                image="https://images.costcobusinessdelivery.com/ImageDelivery/imageService?profileId=12027981&itemId=1503&recipeName=680",
                                price=20, amount=10, description="Yum", user_id=0, expiry_date=datetime(2023, 12, 25, 0, 0)))
-    db.session.commit()
+'''
 @event.listens_for(User.__table__, 'after_create')
 def create_users(*args, **kwargs):
     
