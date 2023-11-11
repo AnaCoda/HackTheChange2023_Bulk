@@ -14,6 +14,7 @@
 src/flask-server/database.db
 src/flask-server/instance
 src/flask-server/__pycache__
+src/flask-server/constants.py
 
 # misc
 .DS_Store

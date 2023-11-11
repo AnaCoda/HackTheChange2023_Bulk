@@ -12,6 +12,7 @@ class ItemForSale(db.Model):
     description = db.Column(db.Text, nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
     expiry_date = db.Column(db.DateTime, nullable=False)
+    receipt_info = db.Column(db.String(1000), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 class Reservations(db.Model):
@@ -35,7 +36,7 @@ class ItemForSaleShema(ma.Schema):
     class Meta:
         # Fields to expose
         fields = ("id","name", "image", "price", "amount"
-        ,"receipt", "description", "date_posted", "expiry_date","user_id")
+        ,"receipt", "description", "date_posted", "expiry_date","user_id","receipt_info")
 class UsersShema(ma.Schema):
     class Meta:
         # Fields to expose
@@ -47,9 +48,11 @@ class ReservationsShema(ma.Schema):
         fields = ("id", "user_id", "itemForSale", "itemForSale_id", "reservedAmount")
 
 @event.listens_for(ItemForSale.__table__, 'after_create')
-def create_eyewear(*args, **kwargs):
+def create_itemsForSale(*args, **kwargs):
     pass
 '''db.session.add(ItemForSale(id=1, name="Campbell's Cream Of Mushroom",
+def create_catalog_posts(*args, **kwargs):
+    db.session.add(ItemForSale(id=1, name="Campbell's Cream Of Mushroom",
                                image="https://images.costcobusinessdelivery.com/ImageDelivery/imageService?profileId=12027981&itemId=1503&recipeName=680",
                                price=20, amount=10, description="Yum", user_id=0, expiry_date=datetime(2023, 12, 25, 0, 0)))
 '''
