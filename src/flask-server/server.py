@@ -44,7 +44,7 @@ def get_catalog_posts():
         "description": post.description,
         "date_posted": post.date_posted,
         "expiry_date": post.expiry_date,
-        "user_id": post.user_id
+        "user_id": post.user_id	
     } for post in catalog_posts])
 
 @app.route("/uploadCatalogPost", methods=["POST"])
