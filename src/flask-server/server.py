@@ -1,6 +1,6 @@
 from flask import current_app,jsonify,request
 from app import create_app,db
-from models import Articles, EyeWear, Post, User,articles_schema, users_schema,user_schema, eyewears_schema, posts_schema
+from models import ItemForSale, Reservations, CatalogPost, User, users_schema,user_schema, itemForSale_schema, itemsForSale_schema, catalogPost_schema, catalogPosts_schema, reservation_schema, reservations_schema
 from eyewearSimilarity import *
 
 # Create an application instance
@@ -9,20 +9,6 @@ app = create_app()
 with app.app_context():
 	db.create_all()
 
-# Define a route to fetch the avaialable articles
-
-eye1 = EyeWearInformation(-1,-1.5,64,22,49,150)
-eye2 = EyeWearInformation(-1.5,-1.75,64,24,53,155)
-print(SimilarityOfEyewear(eye1, eye2))
-
-@app.route("/articles", methods=["GET"], strict_slashes=False)
-def articles():
-
-	articles = Articles.query.all()
-	
-	results = articles_schema.dump(articles)
-
-	return jsonify(results)
 
 @app.route("/users", methods=["GET"], strict_slashes=False)
 def users():
