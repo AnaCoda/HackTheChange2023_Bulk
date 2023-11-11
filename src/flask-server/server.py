@@ -42,6 +42,7 @@ def get_catalog_posts():
 		"price": post.price,
 		"amount": post.amount,
 		"receipt": base64.b64encode(post.receipt).decode('utf-8') if post.receipt else None,
+		"receipt_info": post.receipt_info,
 		"description": post.description,
 		"date_posted": post.date_posted,
 		"expiry_date": post.expiry_date,
@@ -55,13 +56,12 @@ def uploadItem():
 	image = request.files['foodPicture'].read()
 	price = float(form_data.get('price'))
 	amount = int(form_data.get('amount'))
-	receipt = request.files['receipt'].read()
+	receipt = request.files['receipt']
+	receiptRead = request.files['receipt'].read()
 	description = ""
 	expiry_date = datetime.now()
 
-	g = open("image_cache/receipt.jpg", "w")
-	g.write(base64.decodestring(receipt))
-	g.close()
+	receipt.save("image_cache/receipt.jpg")
 
 	receiptInfo = extractReceiptInformation()
 
@@ -71,7 +71,8 @@ def uploadItem():
 		image=image,
 		price=price,
 		amount=amount,
-		receipt=receipt,
+		receipt=receiptRead,
+		receipt_info = receiptInfo,
 		description=description,
 		expiry_date=expiry_date,
 		user_id=0
@@ -88,8 +89,9 @@ def extractReceiptInformation():
 	print(result.document)
 	receiptInfo = ""
 	for line_items_elem in result.document.inference.prediction.line_items:
-			print(line_items_elem.description + ',' + line_items_elem.value + '\n')
-			receiptInfo += line_items_elem.description + ',' + line_items_elem.value + '\n'
+		
+			print(line_items_elem.description + ',' + str(line_items_elem.total_amount)  + '\n')
+			receiptInfo += line_items_elem.description + ',' + str(line_items_elem.total_amount)  + '\n'
 	return receiptInfo
 
 	
