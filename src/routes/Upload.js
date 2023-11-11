@@ -4,20 +4,29 @@ import { useForm } from 'react-hook-form';
 const Upload = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const formData = new FormData();
     formData.append('foodPicture', data.foodPicture[0]);
     formData.append('receipt', data.receipt[0]);
-    formData.append('foodName', data.foodName);
+    formData.append('name', data.foodName);
     formData.append('amount', data.amount);
-    formData.append('cost', data.cost);
-  
-    // Log the FormData object to the console
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
+    formData.append('price', data.cost);
+
+    try {
+      const response = await fetch('/uploadCatalogPost', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        console.log('Item uploaded successfully');
+      } else {
+        console.log('Failed to upload item');
+      }
+    } catch (error) {
+      console.log('Error:', error);
     }
   };
-
   return (
     <div className="inset-0 flex items-center justify-center space-x-4">
       <div className="bg-white p-6 rounded shadow-lg w-1/4">
