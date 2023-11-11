@@ -7,6 +7,7 @@ import random
 import base64
 from constants import mindee_receipt_api_key
 from mindee import Client, PredictResponse, product
+import difflib
 
 # Create an application instance
 app = create_app()
@@ -57,7 +58,6 @@ def uploadItem():
 	price = float(form_data.get('price'))
 	amount = int(form_data.get('amount'))
 	receipt = request.files['receipt']
-	receiptRead = request.files['receipt'].read()
 	description = ""
 	expiry_date = datetime.now()
 
@@ -65,13 +65,15 @@ def uploadItem():
 
 	receiptInfo = extractReceiptInformation()
 
+	receipt.stream.seek(0)
+
 	# USER ID IS CURRENTLY HARDCODED
 	item = ItemForSale(
 		name=name,
 		image=image,
 		price=price,
 		amount=amount,
-		receipt=receiptRead,
+		receipt=request.files['receipt'].read(),
 		receipt_info = receiptInfo,
 		description=description,
 		expiry_date=expiry_date,
@@ -85,6 +87,7 @@ def uploadItem():
 def extractReceiptInformation():
 	mindee_client = Client(api_key=mindee_receipt_api_key)
 	input_doc = mindee_client.source_from_path("image_cache/receipt.jpg")
+	print(input_doc)
 	result: PredictResponse = mindee_client.parse(product.ReceiptV5, input_doc)
 	print(result.document)
 	receiptInfo = ""
@@ -93,6 +96,29 @@ def extractReceiptInformation():
 			print(line_items_elem.description + ',' + str(line_items_elem.total_amount)  + '\n')
 			receiptInfo += line_items_elem.description + ',' + str(line_items_elem.total_amount)  + '\n'
 	return receiptInfo
+
+
+# takes a receipt info string and a title of item as parameters to match
+def extract_item_and_price(receipt_info, user_input):
+  receipt_list = receipt_info.split("\n")
+  receipt_dict = {}
+  for item in receipt_list:
+    item_list = item.split(",")
+    if len(item_list) == 2:
+      receipt_dict[item_list[0]] = item_list[1]
+  user_input = user_input.upper().strip()
+  matches = []
+  for key in receipt_dict.keys():
+    ratio = difflib.SequenceMatcher(None, user_input, key).ratio()
+    if ratio >= 0.5:
+      matches.append((key, ratio))
+  matches.sort(key=lambda x: x[1], reverse=True)
+  if matches:
+    best_match = matches[0]
+    return (best_match[0], receipt_dict[best_match[0]])
+  else:
+    return None
+
 
 	
 if __name__ == "__main__":
