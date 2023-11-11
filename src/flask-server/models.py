@@ -10,6 +10,9 @@ class ItemForSale(db.Model):
     amount = db.Column(db.Integer, nullable=False)
     receipt = db.Column(db.String(100))
     description = db.Column(db.Text, nullable=True)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    expiry_date = db.Column(db.DateTime, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 class Reservations(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -17,15 +20,6 @@ class Reservations(db.Model):
     itemForSale = db.relationship('ItemForSale', backref="post", lazy=True)
     itemForSale_id = db.Column(db.ForeignKey(ItemForSale.id))
     reservedAmount = db.Column(db.Integer, nullable=False)
-
-class CatalogPost(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    expiry_date = db.Column(db.DateTime, nullable=False)
-    itemForSale = db.relationship('ItemForSale', backref="catalogpost", lazy=True)
-    itemForSale_id = db.Column(db.ForeignKey(ItemForSale.id))
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,7 +29,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60))    
     credits = db.Column(db.Integer, nullable=False)
-    posts = db.relationship("CatalogPost", backref="user", lazy=True)
+    itemsForSale = db.relationship("ItemForSale", backref="user", lazy=True)
     
 
 class Articles(db.Model):
@@ -60,17 +54,11 @@ class ItemForSaleShema(ma.Schema):
     class Meta:
         # Fields to expose
         fields = ("id","name", "image", "price", "amount"
-        ,"receipt", "description")
+        ,"receipt", "description", "date_posted", "expiry_date","user_id")
 
 class ReservationsShema(ma.Schema):
     class Meta:
         fields = ("id", "user_id", "itemForSale", "itemForSale_id", "reservedAmount")
-
-class CatalogPostShema(ma.Schema):
-    class Meta:
-        # Fields to expose
-        fields = ("id", "date_posted", "expiry_date",
-                  "itemForSale","itemForSale_id", "user_id",)
 
 # IMPORTANT: These events are for instantiating DEFAULT values in a database. Especially helpful in a hackathon to sync SQLite
 @event.listens_for(Articles.__table__, 'after_create')
@@ -79,16 +67,11 @@ def create_articles(*args, **kwargs):
     db.session.add(Articles(id=2, title='abcd@domain.com', body="helloo"))
     db.session.commit()
 
-@event.listens_for(CatalogPost.__table__, 'after_create')
-def create_posts(*args, **kwargs):
-    db.session.add(CatalogPost(id=1, expiry_date = datetime(2023, 12, 25, 0, 0), user_id=1))
-    db.session.commit()
-
 @event.listens_for(ItemForSale.__table__, 'after_create')
 def create_eyewear(*args, **kwargs):
     db.session.add(ItemForSale(id=1, name="Campbell's Cream Of Mushroom",
                                image="https://images.costcobusinessdelivery.com/ImageDelivery/imageService?profileId=12027981&itemId=1503&recipeName=680",
-                               price=20, amount=10, description="Yum"))
+                               price=20, amount=10, description="Yum", user_id=0, expiry_date=datetime(2023, 12, 25, 0, 0)))
     db.session.commit()
 @event.listens_for(User.__table__, 'after_create')
 def create_users(*args, **kwargs):
@@ -101,9 +84,6 @@ users_schema = UsersShema(many=True)
 
 itemForSale_schema = ItemForSaleShema()
 itemsForSale_schema = ItemForSaleShema(many=True)
-
-catalogPost_schema = CatalogPostShema()
-catalogPosts_schema = CatalogPostShema(many=True)
 
 reservation_schema = ReservationsShema()
 reservations_schema = ReservationsShema(many=True)

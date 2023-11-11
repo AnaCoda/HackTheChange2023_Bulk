@@ -1,6 +1,6 @@
 from flask import current_app,jsonify,request
 from app import create_app,db
-from models import ItemForSale, Reservations, CatalogPost, User, users_schema,user_schema, itemForSale_schema, itemsForSale_schema, catalogPost_schema, catalogPosts_schema, reservation_schema, reservations_schema
+from models import ItemForSale, Reservations, User, users_schema,user_schema, itemForSale_schema, itemsForSale_schema, reservation_schema, reservations_schema
 from eyewearSimilarity import *
 
 # Create an application instance
@@ -28,41 +28,19 @@ def user():
 	return jsonify(results)
 
 
-@app.route("/eyewear", methods=["GET", "POST"], strict_slashes=False)
+@app.route("/catalogPosts", methods=["GET", "POST"], strict_slashes=False)
 def eyewear():
-	eyewear = EyeWear.query.all()
-	for glass in eyewear:
+	items = ItemForSale.query.all()
+	for glass in items:
 		glassDict = glass.__dict__
 		print(glassDict)
 	if request.method == "GET":
-		eyewear = EyeWear.query.all()
+		items = ItemForSale.query.all()
 		
-		results = eyewears_schema.dump(eyewear)
+		results = itemsForSale_schema.dump(items)
 		print(results)
 		print(jsonify(results))
 		return jsonify(results)
-	else:
-		eyewear = EyeWear.query.all()
-		glassDictList = []
-		for glass in eyewear:
-			glassDict = glass.__dict__
-			eye1 = EyeWearInformation(glassDict["sphereLeft"],glassDict["sphereRight"],glassDict["ipdLeft"] + glassDict["ipdRight"],glassDict["lens"],glassDict["bridge"],glassDict["temple"])
-			eye2 = EyeWearInformation(request.form["sphereLeft"],request.form["sphereRight"],request.form["ipdLeft"] + request.form["ipdRight"],request.form["lens"],request.form["bridge"],request.form["temple"])
-			glassDict["similarity"] = SimilarityOfEyewear(eye1, eye2)
-			glassDictList.append(glassDict)
-			print(glassDict)
-		print(glassDictList)
-		return jsonify(glassDictList)
-
-@app.route("/posts", methods=["GET"], strict_slashes=False)
-def posts():
-	#🐔
-	posts = Post.query.all()
-	print(posts[0].__dict__)
 	
-	results = posts_schema.dump(posts)
-	print(results)
-	return (Post.query.first().description)
-
 if __name__ == "__main__":
 	app.run(debug=True)
