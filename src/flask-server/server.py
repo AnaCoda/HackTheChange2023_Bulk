@@ -1,6 +1,6 @@
 from flask import current_app,jsonify,request
 from app import create_app,db
-from models import ItemForSale, Reservations, User, users_schema,user_schema, itemForSale_schema, itemsForSale_schema, reservation_schema, reservations_schema
+from models import ItemForSale, Post, Reservations, User, users_schema,user_schema, itemForSale_schema, itemsForSale_schema, reservation_schema, reservations_schema
 from eyewearSimilarity import *
 from datetime import datetime
 import random
@@ -31,21 +31,57 @@ def user():
 	return jsonify(results)
 
 
-@app.route("/catalogPosts", methods=["GET"], strict_slashes=False)
-def get_catalog_posts():
-    catalog_posts = ItemForSale.query.all()
-    return jsonify([{
-        "id": post.id,
-        "name": post.name,
-        "image": base64.b64encode(post.image).decode('utf-8'),
-        "price": post.price,
-        "amount": post.amount,
-        "receipt": base64.b64encode(post.receipt).decode('utf-8') if post.receipt else None,
-        "description": post.description,
-        "date_posted": post.date_posted,
-        "expiry_date": post.expiry_date,
-        "user_id": post.user_id	
-    } for post in catalog_posts])
+@app.route('/posts', methods=['POST'])
+def createPost():
+	form_data = request.form
+	print(form_data)
+	title = form_data.get('title')
+	content = form_data.get('content')
+	imageURL = form_data.get('imageURL')
+	user_id = 0
+	print(title, content, imageURL)
+
+	post = Post(title=title, content=content, imageURL=imageURL, user_id=user_id)
+	db.session.add(post)
+	db.session.commit()
+
+	return jsonify({'message': 'Post created successfully'}), 201
+
+@app.route('/posts', methods=['GET'])
+def getPosts():
+	posts = Post.query.all()
+	post_list = []
+	for post in posts:
+		post_data = {
+			'id': post.id,
+			'title': post.title,
+			'content': post.content,
+			'imageURL': post.imageURL,
+			'user_id': post.user_id,
+			'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S')
+		}
+		post_list.append(post_data)
+	post_list.sort(key = lambda x : x["created_at"], reverse=True)
+	return jsonify(post_list)
+
+from flask import jsonify
+
+@app.route('/post/<int:post_id>', methods=['GET'])
+def get_post_and_comments(post_id):
+    post = Post.query.get_or_404(post_id)
+    comments = [comment.content for comment in post.comments]
+
+    return jsonify({
+        'post': {
+            'id': post.id,
+            'title': post.title,
+            'content': post.content,
+            'imageURL': post.imageURL,
+            'user_id': post.user_id,
+            'created_at': post.created_at,
+        },
+        'comments': comments
+    })
 
 @app.route("/uploadCatalogPost", methods=["POST"])
 def uploadItem():

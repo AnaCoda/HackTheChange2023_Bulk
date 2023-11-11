@@ -30,7 +30,23 @@ class User(db.Model):
     password = db.Column(db.String(60))    
     credits = db.Column(db.Integer, nullable=False)
     itemsForSale = db.relationship("ItemForSale", backref="user", lazy=True)
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    imageURL = db.Column(db.String(255))
+    user_id = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    comments = db.relationship("Comment", backref="post", lazy=True)
+
     
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+
 class ItemForSaleShema(ma.Schema):
     class Meta:
         # Fields to expose
