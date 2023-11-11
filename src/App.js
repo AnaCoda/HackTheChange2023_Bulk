@@ -6,6 +6,7 @@ import Mission from './routes/Mission';
 import TheHatchText from "./routes/images/The Hatch Finals_Text Only_small.png";
 import PostPage from "./routes/Post";
 
+import Catalog from "./routes/Catalog";
 function App() {
   return (
     <>
@@ -31,6 +32,9 @@ function App() {
           <Link to="/upload" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-base">
             <b>Drop off Food</b>
           </Link>
+          <Link to="/Catalog" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            <b>Catalog</b>
+          </Link>
         </div>
       </nav>
       <Routes>
@@ -39,7 +43,7 @@ function App() {
         <Route path="/Profile" element={<Mission />}></Route>
         <Route path="/upload" element={<Upload />}></Route>
         <Route path="/post/:id" element={<PostPage/>}></Route>
-    
+        <Route path="/Catalog" element={<Catalog />}></Route>
       </Routes>      
     </div>
     </>
