@@ -1,6 +1,7 @@
 from app import db,ma
 from datetime import datetime
 from sqlalchemy import event
+import base64
 
 class ItemForSale(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -12,6 +13,7 @@ class ItemForSale(db.Model):
     description = db.Column(db.Text, nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
     expiry_date = db.Column(db.DateTime, nullable=False)
+    receipt_info = db.Column(db.String(1000), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 class Reservations(db.Model):
@@ -51,7 +53,7 @@ class ItemForSaleShema(ma.Schema):
     class Meta:
         # Fields to expose
         fields = ("id","name", "image", "price", "amount"
-        ,"receipt", "description", "date_posted", "expiry_date","user_id")
+        ,"receipt", "description", "date_posted", "expiry_date","user_id","receipt_info")
 class UsersShema(ma.Schema):
     class Meta:
         # Fields to expose
@@ -63,12 +65,16 @@ class ReservationsShema(ma.Schema):
         fields = ("id", "user_id", "itemForSale", "itemForSale_id", "reservedAmount")
 
 @event.listens_for(ItemForSale.__table__, 'after_create')
-def create_eyewear(*args, **kwargs):
-    pass
-'''db.session.add(ItemForSale(id=1, name="Campbell's Cream Of Mushroom",
-                               image="https://images.costcobusinessdelivery.com/ImageDelivery/imageService?profileId=12027981&itemId=1503&recipeName=680",
+def create_itemsForSale(*args, **kwargs):
+    with open("sample_images/costcobeefstew.jpg", "rb") as image_file:
+        image = base64.b64encode(image_file.read())
+    with open("sample_images/receipt.jpg", "rb") as image_file:
+        receipt = base64.b64encode(image_file.read())
+    db.session.add(ItemForSale(id=1, name="Costco Beef Chili Stew",
+                               image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
                                price=20, amount=10, description="Yum", user_id=0, expiry_date=datetime(2023, 12, 25, 0, 0)))
-'''
+    db.session.commit()
+
 @event.listens_for(User.__table__, 'after_create')
 def create_users(*args, **kwargs):
     

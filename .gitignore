@@ -7,13 +7,15 @@
 
 # testing
 /coverage
-
+venv/
 # production
 /build
 
 src/flask-server/database.db
 src/flask-server/instance
 src/flask-server/__pycache__
+src/flask-server/constants.py
+src/flask-server/image_cache/receipt.jpg
 
 # misc
 .DS_Store

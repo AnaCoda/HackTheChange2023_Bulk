@@ -1,8 +1,10 @@
+This project requires a mindee API key for receipt parsing in flask-server/contents.py
 # Backend (src/flask-server)
 ```
 python -m pip install flask_migrate
 python -m pip install flask_marshmallow
 python -m pip install flask_cors
+python -m pip install mindee
 python server.py
 ```
 
