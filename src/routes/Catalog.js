@@ -8,6 +8,7 @@ const Catalog = () => {
   const [itemsWithPhotos, setItemsWithPhotos] = useState([]);
   const [priceFilter, setPriceFilter] = useState([]);
 
+  const [modelIsOpen, setModelIsOpen] = useState([]);
   const handlePriceFilterChange = (e) => {
     const value = e.target.value;
     if (priceFilter.includes(value)) {
@@ -27,6 +28,9 @@ const Catalog = () => {
     // For example, you might want to fetch updated data or update the UI
   };
   
+  const closeModel = () => {
+    setModelIsOpen(false);
+  }
 
   const handleAddClick = (id) => {
     setCounters((prevCounters) => {
@@ -87,7 +91,8 @@ const Catalog = () => {
       });
   
       if (response.ok) {
-       
+
+        setModelIsOpen(true);       
         // Update the local state with the updated amount
         setItemsWithPhotos((prevItems) =>
         prevItems.map((item) =>
@@ -218,7 +223,7 @@ const Catalog = () => {
         <div className="mt-2 flex justify-center items-center px-4">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search for what food item you need..."
             className="p-2 mt-4 w-full border border-gray-800 rounded-md shadow-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -293,6 +298,7 @@ const Catalog = () => {
 <button
  className=' text-gray-700 border-2  hover:text-gray-900 border-black ml-6 mt-2 hover:scale-110 text-sm p-2 font-mono tracking-tighter rounded-md shadow-sm'>Watch</button>
       </div>
+
     ))}
     </div>
 
