@@ -79,7 +79,7 @@ def create_itemsForSale(*args, **kwargs):
         receipt = image_file.read()
     db.session.add(ItemForSale(id=1, name="Costco Beef Chili Stew",
                                image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
-                               price=20, amount=10, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0)))
+                               price=20, originalPrice=24, origin="Costco", amount=10, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0)))
    
     db.session.add(ItemForSale(id=2, name="Costco Beef Chili Stew",
                                image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",

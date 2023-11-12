@@ -29,15 +29,20 @@ const Catalog = () => {
   
 
   const handleAddClick = (id) => {
-    setCounters((prevCounters) => ({
-      ...prevCounters,
-      [id]: (prevCounters[id] || 0) + 1,
-    }));
+    setCounters((prevCounters) => {
+      const newCount = (prevCounters[id] || 0) + 1;
+      const maxAmount = itemsWithPhotos.find((item) => item.id === id)?.amount || 0;
+  
+      return {
+        ...prevCounters,
+        [id]: newCount <= maxAmount ? newCount : maxAmount,
+      };
+    });
   };
   const handleSubtractClick = (id) => {
     setCounters((prevCounters) => ({
       ...prevCounters,
-      [id]: (prevCounters[id] || 0) - 1,
+      [id]: Math.max((prevCounters[id] || 0) - 1, 0),
     }));
   };
 
@@ -66,7 +71,43 @@ const Catalog = () => {
     fetchData();
   }, [searchTerm]);
 
-
+  const handleReserveItem = async (itemId, itemName, reservedAmount) => {
+    
+    // Create a copy of the form data to log it without interfering with the original
+    const formDataCopy = new FormData();
+    formDataCopy.append('user_id', 1);
+    formDataCopy.append('itemForSale', itemName);
+    formDataCopy.append('itemForSale_id', itemId);
+    formDataCopy.append('reserved_amount', reservedAmount);
+  
+    try {
+      const response = await fetch('/reservations', {
+        method: 'POST',
+        body: formDataCopy,
+      });
+  
+      if (response.ok) {
+       
+        // Update the local state with the updated amount
+        setItemsWithPhotos((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId
+            ? { ...item, amount: item.amount - (counters[itemId] || 0) }
+            : item
+        )
+      
+      );
+    
+        console.log('Reservation created for user');
+        console.log(formDataCopy);
+      } else {
+        console.log('Failed to create reservation');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  
+  };
 
   // const handleUpdateAmount = async (itemId, newAmount) => {
   //   try {
@@ -236,16 +277,21 @@ const Catalog = () => {
           <span className="inline ml-2 text-blue-700 font-sans animate-pulse">{item.amount}</span>
         </h2>
         <div className="text-gray-900 p-1 mx-3 font-sans text-sm mb-3">Expiry: {item.expiry_date.slice(0, -12)}</div>
-        <button onClick={() => handleSubtractClick(item.id)} className="text-zinc-900 font-sans text-xl p-2 ml-3 hover:scale-150">-</button>
-        <p className="inline bg-slate-500 text-white text-base font-sans p-2 ml-2 shadow-sm rounded-full">{counters[item.id] || 0}</p>
-        <button onClick={() => handleAddClick(item.id)} className="text-zinc-900 font-sans text-xl p-2 ml-3 hover:scale-150">+</button>
-        <p className="inline justify-end items-end ml-5 font-sans text-lg">${item.price}</p>
+        {/* <div className="text-gray-900 p-1 mx-3 mb-1 font-sans text-sm">Uploaded On:{item.date_posted}</div> */}
+          <div className='bg-gray-700'></div>
+          <button onClick={() => handleSubtractClick(item.id) } className='text-zinc-900 font-sans text-xl p-2 ml-3 hover:scale-150'>-
+          </button>
+          <p className='inline  border-2 border-gray-600 text-black text-base font-sans rounded-full py-1 px-2 ml-2'>{counters[item.id] || 0}</p>
+          <button onClick={() => handleAddClick(item.id) } className='text-zinc-900 font-sans text-xl p-2 ml-3 hover:scale-150'>+
+          </button>
+       
+        {/* Add other properties here */}
+        <p className='inline justify-end items-end ml-5 font-sans font-bold text-blue-600 text-lg'>${item.price}</p>
+        <button onClick={() => handleReserveItem(item.id, item.name, counters)}
+ className=' text-gray-700 border-2  hover:text-gray-900 border-black ml-6 mt-2 hover:scale-110 text-sm p-2 font-mono tracking-tighter rounded-md shadow-sm'>Reserve</button>
 
-        {/* Reserve and Watch buttons */}
-        <div className="flex justify-between mt-4">
-          <button className="bg-black text-zinc-100 text-base font-sans tracking-wider rounded-md shadow-sm px-4 py-2 hover:scale-110">Reserve</button>
-          <button className="bg-gray-500 text-white text-base font-sans tracking-wider rounded-md shadow-sm px-4 py-2 hover:scale-110">Watch</button>
-        </div>
+<button
+ className=' text-gray-700 border-2  hover:text-gray-900 border-black ml-6 mt-2 hover:scale-110 text-sm p-2 font-mono tracking-tighter rounded-md shadow-sm'>Watch</button>
       </div>
     ))}
     </div>
