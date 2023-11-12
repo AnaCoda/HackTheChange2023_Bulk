@@ -1,6 +1,6 @@
 from flask import current_app,jsonify,request
 from app import create_app,db
-from models import Comment, ItemForSale, Post, Reservations, User, users_schema,user_schema, itemForSale_schema, itemsForSale_schema, reservation_schema, reservations_schema
+from models import ItemForSale, Post, Reservations, User, users_schema,user_schema, itemForSale_schema, itemsForSale_schema, reservation_schema, reservations_schema
 from eyewearSimilarity import *
 from datetime import datetime
 import random
@@ -47,6 +47,7 @@ def createPost():
 	title = form_data.get('title')
 	content = form_data.get('content')
 	imageURL = form_data.get('imageURL')
+	imageURL = form_data.get('imageURL')
 	catagory = form_data.get('category')
 	user_id = 0
 	print(title, content, imageURL)
@@ -81,6 +82,7 @@ def get_reserved_items(user_id):
     if not user:
         return jsonify({'message': 'User not found'}), 404
 	
+
     reserved_items = Reservations.query.filter_by(user_id=user_id).all()
     print("BRUH", reserved_items)
     reserved_items_data = []
@@ -128,14 +130,10 @@ def get_posted_items(user_id):
         })
     
     return jsonify(posted_items_data), 200
-
 @app.route('/post/<int:post_id>', methods=['GET'])
 def get_post_and_comments(post_id):
     post = Post.query.get_or_404(post_id)
-    comments = []
-    for comment in post.comments:
-        name = comment.user.firstName + ' ' + comment.user.lastName
-        comments.append((comment.content, name if name != " " else "Unnamed"))
+    comments = [comment.content for comment in post.comments]
 
     return jsonify({
         'post': {
@@ -148,48 +146,50 @@ def get_post_and_comments(post_id):
         },
         'comments': comments
     })
-
-
-@app.route('/posts/<int:post_id>/comments', methods=['POST'])
-def add_comment(post_id):
-    data = request.get_json()
-    content = data.get('content')
-    user_id = data.get('user_id')
-
-    if not content or not user_id:
-        return jsonify({'message': 'Content and user_id are required'}), 400
-
-    post = Post.query.get(post_id)
-    if not post:
-        return jsonify({'message': 'Post not found'}), 404
-
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'message': 'User not found'}), 404
-
-    comment = Comment(content=content, user=user, post=post)
-    db.session.add(comment)
-    db.session.commit()
-
-    return jsonify({'message': 'Comment added successfully'}), 201
-
+from flask import request
 
 @app.route("/catalogPosts", methods=["GET"], strict_slashes=False)
 def get_catalog_posts():
-	catalog_posts = ItemForSale.query.all()
-	return jsonify([{
-		"id": post.id,
-		"name": post.name,
-		"image": base64.b64encode(post.image).decode('utf-8'),
-		"price": post.price,
-		"amount": post.amount,
-		"receipt": base64.b64encode(post.receipt).decode('utf-8') if post.receipt else None,
-		"receipt_info": post.receipt_info,
-		"description": post.description,
-		"date_posted": post.date_posted,
-		"expiry_date": post.expiry_date,
-		"user_id": post.user_id
-	} for post in catalog_posts])
+    min_price = request.args.get('min_price', type=int, default=0)
+    max_price = request.args.get('max_price', type=int, default=150)  
+    search_term = request.args.get('search', type=str, default='')
+    
+    catalog_posts = ItemForSale.query.filter(
+        ItemForSale.price.between(min_price, max_price),
+        ItemForSale.name.ilike(f"%{search_term}%")
+    ).all()
+
+    return jsonify([{
+        "id": post.id,
+        "name": post.name,
+        "image": base64.b64encode(post.image).decode('utf-8'),
+        "price": post.price,
+        "amount": post.amount,
+        "receipt": base64.b64encode(post.receipt).decode('utf-8') if post.receipt else None,
+        "receipt_info": post.receipt_info,
+        "description": post.description,
+        "date_posted": post.date_posted,
+        "expiry_date": post.expiry_date,
+        "user_id": post.user_id
+    } for post in catalog_posts])
+
+# @app.route("/catalogPosts", methods=["GET"], strict_slashes=False)
+# def get_catalog_posts():
+      
+	# catalog_posts = ItemForSale.query.all()
+	# return jsonify([{
+	# 	"id": post.id,
+	# 	"name": post.name,
+	# 	"image": base64.b64encode(post.image).decode('utf-8'),
+	# 	"price": post.price,
+	# 	"amount": post.amount,
+	# 	"receipt": base64.b64encode(post.receipt).decode('utf-8') if post.receipt else None,
+	# 	"receipt_info": post.receipt_info,
+	# 	"description": post.description,
+	# 	"date_posted": post.date_posted,
+	# 	"expiry_date": post.expiry_date,
+	# 	"user_id": post.user_id
+	# } for post in catalog_posts])
 
 @app.route("/reservations", methods=["GET"], strict_slashes=False)
 def get_reservations():
@@ -231,10 +231,7 @@ def uploadItem():
 	amount = int(form_data.get('amount'))
 	receipt = request.files['receipt']
 	description = ""
-	print("Testingdsf asdas")
-	print(form_data.get("expiryDate"))
-
-	expiry_date = datetime.strptime(form_data.get("expiryDate"), '%Y-%m-%d')
+	expiry_date = datetime.now()
 
 
 	receipt.save("image_cache/receipt.jpg")

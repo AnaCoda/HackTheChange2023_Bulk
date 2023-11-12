@@ -4,12 +4,45 @@ import React, { useState, useEffect } from 'react';
 export default function Mission() {
 
     /*      Left Section    */
+
+    /*  Fetching User Data From /user   */
+
+    const [userData, setUserData] = useState(null);
+    const userAPIUrl = '/user';
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(userAPIUrl);
+    
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+                setUserData(data);
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        };
+    
+        fetchData();
+    }, []);
+    
+    // ...
+    
+    // Somewhere in your component where you use userData.email
+    const userEmail = userData ? userData.email : null;
+    const userFName = userData ? userData.firstName : null;
+    const userLName = userData ? userData.lastName : null;
+    const userId = userData ? userData.id : null;
+
     var Profile = (
         <>
             <div className="flex flex-col items-center pb-4">
                 <img src="5856.jpg" alt="Profile Pic" className="rounded-full w-32 h-32 object-cover mb-4 border border-gray-300"/>
-                <h2 className="text-lg font-semibold mb-2">John Doe</h2>
-                <p className="text-sm text-gray-600">john.doe@example.com</p>
+                <h2 className="text-lg font-semibold mb-2">{userEmail}</h2>
+                <p className="text-sm text-gray-600">{userFName + userLName}</p>
             </div>
         </>
     )
@@ -94,30 +127,8 @@ export default function Mission() {
         </>
     )
 
-    /*  Fetching User Data From /user   */
 
-    const [userData, setUserData] = useState(null);
-    const apiUrl = '/user'
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await fetch(apiUrl);
     
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const data = await response.json();
-            setUserData(data);
-          } catch (error) {
-            console.error('Fetch error:', error);
-          }
-        };
-    
-        fetchData();
-      }, []);
-
-      
 
 
     var ProductCard = (
@@ -140,6 +151,49 @@ export default function Mission() {
             </div>
         </>
     )
+
+    const [reservedData, setReservedData] = useState(null);
+    const reservedDataAPIUrl = '/users/1/reserved_items';
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(reservedDataAPIUrl);
+    
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+                setReservedData(data);
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        };
+    
+        fetchData();
+    }, []);
+
+    if (reservedData === null) {
+        return <p>Loading...</p>;
+    }
+   
+    const ReservedProductCards = reservedData.map((item, index) => (
+        <div key={index} className="flex border border-grey-300 rounded-md p-3">
+        <div className="flex flex-row w-1/5">
+            <img src={`data:image/jpeg;base64,${item.image}`} alt={item.name} className="w-36 h-36 object-cover border border-gray-300" />
+        </div>
+    
+        <div className="flex justify-between flex-col w-2/5">
+            <div className="text-lg font-bold text-black">{item.name}</div>
+            <div className="text-md">${item.price}</div>
+        </div>
+    
+        <div className="flex flex-row w-2/5 items-end justify-end">
+            <div className="">Quantity: {item.reserved_amount}</div>
+        </div>
+        </div>
+    ));
      
     var DropOffsContent = (
         <>
@@ -166,16 +220,15 @@ export default function Mission() {
             </div>
         </>
     )
+
+
+    
+
     var ReservedItemsContent = (
         <>
              <div className="p-3">
                 <div className="text-lg font-bold mb-2">Products You Reserved For Pick Up</div>
-                {ProductCard}
-                {ProductCard}
-                {ProductCard}
-                {ProductCard}
-                {ProductCard}
-                {ProductCard}
+                {ReservedProductCards}
 
             </div>
         </>

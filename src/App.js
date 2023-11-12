@@ -22,7 +22,7 @@ function App() {
         </Link>
         <div className="flex space-x-12 mx-[10vh] items-center text-lg">
           <Link to="/" className="hover:text-gray-600 font-sans font-thin tracking-tight text-gray-800">
-            <b>Shop</b>
+            <b>Home</b>
           </Link>
           <Link to="/Discussion" className="hover:text-gray-600 font-sans font-thin tracking-tight text-gray-800">
             <b>Discussion</b>
