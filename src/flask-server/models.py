@@ -66,10 +66,10 @@ class ReservationsShema(ma.Schema):
 
 @event.listens_for(ItemForSale.__table__, 'after_create')
 def create_itemsForSale(*args, **kwargs):
-    with open("sample_images/costcobeefstew.jpg", "rb") as image_file:
-        image = base64.b64encode(image_file.read())
+    with open("sample_images/beefchilistew.jpg", "rb") as image_file:
+        image = image_file.read()
     with open("sample_images/receipt.jpg", "rb") as image_file:
-        receipt = base64.b64encode(image_file.read())
+        receipt = image_file.read()
     db.session.add(ItemForSale(id=1, name="Costco Beef Chili Stew",
                                image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
                                price=20, amount=10, description="Yum", user_id=0, expiry_date=datetime(2023, 12, 25, 0, 0)))
