@@ -76,8 +76,31 @@ def getPosts():
 	post_list.sort(key = lambda x : x["created_at"], reverse=True)
 	return jsonify(post_list)
 
-from flask import jsonify
-
+@app.route('/users/<int:user_id>/reserved_items', methods=['GET'])
+def get_reserved_items(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+    
+    reserved_items = Reservations.query.filter_by(user_id=user_id).all()
+    print("BRUH", reserved_items)
+    reserved_items_data = []
+    for reservation in reserved_items:
+        item = reservation.itemForSale
+        reserved_items_data.append({
+            'id': item.id,
+            'name': item.name,
+            'price': item.price,
+            'amount': item.amount,
+            'description': item.description,
+            'date_posted': item.date_posted,
+            'expiry_date': item.expiry_date,
+            'receipt_info': item.receipt_info,
+            'user_id': item.user_id,
+            'reserved_amount': reservation.reservedAmount
+        })
+    
+    return jsonify(reserved_items_data), 200
 @app.route('/post/<int:post_id>', methods=['GET'])
 def get_post_and_comments(post_id):
     post = Post.query.get_or_404(post_id)
