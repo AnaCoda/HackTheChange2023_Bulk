@@ -85,7 +85,7 @@ export default function Mission() {
         </>
     )
     
-    var CreditBalance = (
+    var OverviewContent = (
         <>
             <div className="p-3">
                 <div className="text-lg font-bold mb-2">Credit Balance</div>
@@ -117,14 +117,26 @@ export default function Mission() {
         fetchData();
       }, []);
 
+      
+
 
     var ProductCard = (
         <>
-            <div className="flex">
-                <img src="5856.jpg" alt="Profile Pic" className="rounded-full w-32 h-32 object-cover mb-4 border border-gray-300"/>
-                <div className="text-md">Product Name</div>
-                <div className="">$23.23</div>
-                <div className="">Quantity: 2</div>
+            <div className="flex border border-grey-300 rounded-md p-3 items-center">
+                <div className="flex flex-row w-1/5">
+                    <img src="5856.jpg" alt="Profile Pic" className=" w-36 h-36 object-cover border border-gray-300"/>
+
+                </div>
+
+                <div className="flex justify-between flex-col w-2/5">
+                    <div className="text-lg font-bold text-black">Product Name</div>
+                    <div className="text-md">$23.23</div>
+
+                </div>
+                <div className="flex flex-row w-2/5 items-end justify-end">
+                    <div className="">Quantity: 2</div>
+                </div>
+                
             </div>
         </>
     )
@@ -134,6 +146,11 @@ export default function Mission() {
             <div className="p-3">
                 <div className="text-lg font-bold mb-2">Products You Dropped Off</div>
                 {ProductCard}
+                {ProductCard}
+                {ProductCard}
+                {ProductCard}
+
+
             </div>
         </>
     )
@@ -142,6 +159,10 @@ export default function Mission() {
              <div className="p-3">
                 <div className="text-lg font-bold mb-2">Products You Purchased</div>
                 {ProductCard}
+                {ProductCard}
+                {ProductCard}
+                {ProductCard}
+
             </div>
         </>
     )
@@ -150,6 +171,12 @@ export default function Mission() {
              <div className="p-3">
                 <div className="text-lg font-bold mb-2">Products You Reserved For Pick Up</div>
                 {ProductCard}
+                {ProductCard}
+                {ProductCard}
+                {ProductCard}
+                {ProductCard}
+                {ProductCard}
+
             </div>
         </>
     )
@@ -158,8 +185,7 @@ export default function Mission() {
         <>
             <div id="overviewTab" className={`tab-content ${activeTab === 'overview' ? '' : 'hidden'}`}>
                     {/* Overview content goes here */}
-                    {CreditBalance}
-                    <p>Overview content</p>
+                    {OverviewContent}
                 </div>
                 <div id="dropOffsTab" className={`tab-content ${activeTab === 'dropOffs' ? '' : 'hidden'}`}>
                     {/* Drop Offs content goes here */}
@@ -167,11 +193,11 @@ export default function Mission() {
                 </div>
                 <div id="purchasesTab" className={`tab-content ${activeTab === 'purchases' ? '' : 'hidden'}`}>
                     {/* Purchase content goes here */}
-                    <p>Purchase History</p>
+                    {PurchaseHistoryContent}
                 </div>
                 <div id="reservedTab" className={`tab-content ${activeTab === 'reserved' ? '' : 'hidden'}`}>
                     {/* reserved content goes here */}
-                    <p>Reserved Items</p>
+                    {ReservedItemsContent}
             </div>
         </>
     )
