@@ -2,6 +2,7 @@ from app import db,ma
 from datetime import datetime
 from sqlalchemy import event
 import base64
+from marshmallow import fields
 
 class ItemForSale(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -55,6 +56,8 @@ class ItemForSaleShema(ma.Schema):
         # Fields to expose
         fields = ("id","name", "image", "price", "amount"
         ,"receipt", "description", "date_posted", "expiry_date","user_id","receipt_info")
+    image = fields.Function(lambda obj: base64.b64encode(obj.image).decode('utf-8'))
+    receipt = fields.Function(lambda obj: base64.b64encode(obj.receipt).decode('utf-8'))
 class UsersShema(ma.Schema):
     class Meta:
         # Fields to expose

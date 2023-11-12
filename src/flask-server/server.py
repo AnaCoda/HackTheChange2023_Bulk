@@ -112,6 +112,17 @@ def get_catalog_posts():
 		"user_id": post.user_id
 	} for post in catalog_posts])
 
+@app.route("/reservations", methods=["GET"], strict_slashes=False)
+def get_reservations():
+	reservations = Reservations.query.all()
+	return jsonify([{
+		"id": reservation.id,
+		"user_id": reservation.user_id,
+		"itemForSale": itemForSale_schema.dump(reservation.itemForSale),
+		"itemForSale_id": reservation.itemForSale_id,
+		"reservedAmount": reservation.reservedAmount
+	} for reservation in reservations])
+
 @app.route("/uploadCatalogPost", methods=["POST"])
 def uploadItem():
 	form_data = request.form
