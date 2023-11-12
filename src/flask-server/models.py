@@ -9,6 +9,8 @@ class ItemForSale(db.Model):
     name = db.Column(db.String(100), nullable=False)
     image = db.Column(db.LargeBinary, nullable=False)
     price = db.Column(db.Float, nullable=False)
+    originalPrice = db.Column(db.Float, nullable=True)
+    origin = db.Column(db.String(100), nullable=True)
     amount = db.Column(db.Integer, nullable=False)
     receipt = db.Column(db.LargeBinary)
     description = db.Column(db.Text, nullable=True)
