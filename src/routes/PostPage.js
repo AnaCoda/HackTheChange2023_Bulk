@@ -16,14 +16,15 @@ const PostPage = () => {
         .then((response) => response.json())
         .then((data) => {
           setPost(data);
+          setComments(data.comments)
+          console.log(comments)
           fetch(`/user/${data.post.user_id}`)
             .then((response) => response.json())
             .then((userData) => {
-              if(userData.firstName || userData.lastName) setUserName(`${userData.firstName} ${userData.lastName}`);
+              if (userData.firstName || userData.lastName) setUserName(`${userData.firstName} ${userData.lastName}`);
             })
             .catch((error) => console.error(error));
-            setIsLoading(false);
-
+          setIsLoading(false);
         })
         .catch((error) => console.error(error));
     }, 1);
@@ -36,8 +37,24 @@ const PostPage = () => {
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     if (comment.trim() !== '') {
-      setComments((prevComments) => [...prevComments, comment]);
+      setComments((prevComments) => [...prevComments, [comment, "Bob"]]);
       setComment('');
+
+      fetch(`/posts/${id}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: comment,
+          user_id: 1, // Replace with the actual user ID
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data); // Handle the response as needed
+        })
+        .catch((error) => console.error(error));
     }
   };
 
@@ -56,10 +73,11 @@ const PostPage = () => {
           <h1 className="text-3xl font-bold mb-4">{post.post.title}</h1>
           <p className="text-gray-600">By: {userName != "" ? userName : "unnamed"} on {new Date(post.post.created_at).toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})}</p>
           <div className="mt-8">
-            <div className="flex justify-center">
+            {post.post.imageURL != "" && <div className="flex justify-center">
               <img src={post.post.imageURL} className='h-40 object-cover mb-4 rounded-md bg-center'></img>
             </div>
-            <p className="mb-2 text-center">{post.post.content}</p>
+            }
+            <p className="mb-2 text-center" style={{ whiteSpace: 'pre-line' }}>{post.post.content}</p>
           </div>
           <div className="mt-8">
             <h2 className="text-xl font-bold mb-2">Comments</h2>
@@ -67,8 +85,8 @@ const PostPage = () => {
               <p className="text-gray-600">No comments yet.</p>
             ) : (
               comments.map((comment, index) => (
-                <div className="bg-green-100 rounded-lg p-4 mt-4" key={index}>
-                  <p className="text-gray-800">{comment}</p>
+                <div className="bg-green-100 rounded-lg p-2 mt-4" key={index}>
+                  <p className="text-gray-800">{comment[1] + " - " + comment[0]}</p>
                 </div>
               ))
             )}

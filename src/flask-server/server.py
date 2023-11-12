@@ -1,6 +1,6 @@
 from flask import current_app,jsonify,request
 from app import create_app,db
-from models import ItemForSale, Post, Reservations, User, users_schema,user_schema, itemForSale_schema, itemsForSale_schema, reservation_schema, reservations_schema
+from models import Comment, ItemForSale, Post, Reservations, User, users_schema,user_schema, itemForSale_schema, itemsForSale_schema, reservation_schema, reservations_schema
 from eyewearSimilarity import *
 from datetime import datetime
 import random
@@ -130,10 +130,14 @@ def get_posted_items(user_id):
         })
     
     return jsonify(posted_items_data), 200
+
 @app.route('/post/<int:post_id>', methods=['GET'])
 def get_post_and_comments(post_id):
     post = Post.query.get_or_404(post_id)
-    comments = [comment.content for comment in post.comments]
+    comments = []
+    for comment in post.comments:
+        name = comment.user.firstName + ' ' + comment.user.lastName
+        comments.append((comment.content, name if name != " " else "Unnamed"))
 
     return jsonify({
         'post': {
@@ -146,6 +150,31 @@ def get_post_and_comments(post_id):
         },
         'comments': comments
     })
+
+
+@app.route('/posts/<int:post_id>/comments', methods=['POST'])
+def add_comment(post_id):
+    data = request.get_json()
+    content = data.get('content')
+    user_id = data.get('user_id')
+
+    if not content or not user_id:
+        return jsonify({'message': 'Content and user_id are required'}), 400
+
+    post = Post.query.get(post_id)
+    if not post:
+        return jsonify({'message': 'Post not found'}), 404
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    comment = Comment(content=content, user=user, post=post)
+    db.session.add(comment)
+    db.session.commit()
+
+    return jsonify({'message': 'Comment added successfully'}), 201
+
 
 @app.route("/catalogPosts", methods=["GET"], strict_slashes=False)
 def get_catalog_posts():
