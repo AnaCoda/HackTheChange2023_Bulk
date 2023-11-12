@@ -204,6 +204,26 @@ def get_reservations():
 		"reservedAmount": reservation.reservedAmount
 	} for reservation in reservations])
 
+@app.route("/reservations", methods=["POST"], strict_slashes=False)
+def add_reservation():
+	form_data = request.form
+	user_id = 0
+	itemForSale_id = form_data['itemForSale_id']
+	itemForSale = ItemForSale.query.get(itemForSale_id)
+	reserved_amount = form_data['reserved_amount']
+
+	reservation = Reservations(
+        user_id = user_id,
+        itemForSale = itemForSale,
+        itemForSale_id = itemForSale_id,
+        reservedAmount = reserved_amount
+	)
+      
+	db.session.add(reservation)
+	db.session.commit()
+	resp = jsonify(success=True)
+	return resp
+
 @app.route("/uploadCatalogPost", methods=["POST"])
 def uploadItem():
 	form_data = request.form

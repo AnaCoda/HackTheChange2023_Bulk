@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
+import { FaSpinner } from 'react-icons/fa';
 
 import "./Upload.css"
 
@@ -12,6 +13,8 @@ const Upload = () => {
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const [receiptImage, setReceiptImage] = React.useState(null);
   const [productImage, setProductImage] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [approvalModalIsOpen, setApprovalModalIsOpen] = React.useState(false);
 
   const [showForm, setShowForm] = React.useState(false);
   const [correctItem, setCorrectItem] = React.useState('');
@@ -37,6 +40,7 @@ const Upload = () => {
     // Store the images in the state
     setReceiptImage(data.receipt[0]);
     setProductImage(data.foodPicture[0]);
+    setIsLoading(true);
 
     try {
       const response = await fetch('/uploadCatalogPost', {
@@ -56,11 +60,20 @@ const Upload = () => {
     } catch (error) {
       console.log('Error:', error);
     }
+    setIsLoading(false);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
   };
+
+  if (isLoading) {
+    return (
+      <div className="bg-green-200 min-h-screen py-8 flex items-center justify-center">
+        <FaSpinner className="text-green-500 animate-spin text-4xl" />
+      </div>
+    );
+  }
 
   return (
     <div className="inset-0 flex items-center justify-center space-x-4">
@@ -156,17 +169,17 @@ const Upload = () => {
       <div className="button-container">
         <button className="yes" onClick={() => {
           closeModal();
-          navigate('/catalog');
+          setApprovalModalIsOpen(true);
         }}>Yes</button>
         <button className="no" onClick={() => {setShowForm(true)}}>No</button>
       </div>
       {showForm && (
       <form onSubmit={(e) => {
+        closeModal();
         e.preventDefault();
         console.log(`Correct item: ${correctItem}`);
         setShowForm(false);
-        navigate('/catalog');
-        // You can add code here to handle the correct item
+        setApprovalModalIsOpen(true);
       }}>
         <label style={{ display: 'block', marginBottom: '10px' }}>
           Please enter the correct receipt item and we will review your submission:
@@ -176,10 +189,20 @@ const Upload = () => {
       </form>
       
     )}
-
-
     </Modal>
 
+    <Modal
+      isOpen={approvalModalIsOpen}
+      onRequestClose={() => setApprovalModalIsOpen(false)}
+      contentLabel="Approval Modal"
+      className="ReactModal__Content"
+      overlayClassName="ReactModal__Overlay"
+    >
+      <h2>Thank you for posting your extra bulk food to help save the planet and your wallet!<br/><br/>
+        Your posting is preliminarily up and you will be approved to drop off your food within 24 hours.<br/><br/>
+        You will have up to a week to drop off your food after approval.</h2>
+      <button className="yes" onClick={() => navigate('/catalog')}>Catalog</button>
+    </Modal>
 
     </div>
     
