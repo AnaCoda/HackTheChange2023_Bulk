@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
+import { FaSpinner } from 'react-icons/fa';
 
 import "./Upload.css"
 
@@ -12,6 +13,7 @@ const Upload = () => {
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const [receiptImage, setReceiptImage] = React.useState(null);
   const [productImage, setProductImage] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const [showForm, setShowForm] = React.useState(false);
   const [correctItem, setCorrectItem] = React.useState('');
@@ -37,6 +39,7 @@ const Upload = () => {
     // Store the images in the state
     setReceiptImage(data.receipt[0]);
     setProductImage(data.foodPicture[0]);
+    setIsLoading(true);
 
     try {
       const response = await fetch('/uploadCatalogPost', {
@@ -56,11 +59,20 @@ const Upload = () => {
     } catch (error) {
       console.log('Error:', error);
     }
+    setIsLoading(false);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
   };
+
+  if (isLoading) {
+    return (
+      <div className="bg-green-200 min-h-screen py-8 flex items-center justify-center">
+        <FaSpinner className="text-green-500 animate-spin text-4xl" />
+      </div>
+    );
+  }
 
   return (
     <div className="inset-0 flex items-center justify-center space-x-4">
@@ -166,7 +178,6 @@ const Upload = () => {
         console.log(`Correct item: ${correctItem}`);
         setShowForm(false);
         navigate('/catalog');
-        // You can add code here to handle the correct item
       }}>
         <label style={{ display: 'block', marginBottom: '10px' }}>
           Please enter the correct receipt item and we will review your submission:
