@@ -21,19 +21,19 @@ function App() {
           />
         </Link>
         <div className="flex space-x-12 mx-[10vh] items-center text-lg">
-          <Link to="/" className="hover:text-gray-600 text-gray-800">
+          <Link to="/" className="hover:text-gray-600 font-sans font-thin tracking-tight text-gray-800">
             <b>Shop</b>
           </Link>
-          <Link to="/Discussion" className="hover:text-gray-600 text-gray-800">
+          <Link to="/Discussion" className="hover:text-gray-600 font-sans font-thin tracking-tight text-gray-800">
             <b>Discussion</b>
           </Link>
-          <Link to="/Profile" className="hover:text-gray-600 text-gray-800">
+          <Link to="/Profile" className="hover:text-gray-600 font-sans font-thin tracking-tight text-gray-800">
             <b>Profile</b>
           </Link>
-          <Link to="/Catalog" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-base">
+          <Link to="/Catalog" className="hover:text-gray-600 font-sans font-thin tracking-tight text-gray-800">
             <b>Marketplace</b>
           </Link>
-          <Link to="/upload" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-base">
+          <Link to="/upload" className="bg-green-500 text-white px-4 py-2 font-sans font-thin tracking-tight rounded hover:bg-green-600 text-base">
             <b>Drop off Food</b>
           </Link>
         </div>
