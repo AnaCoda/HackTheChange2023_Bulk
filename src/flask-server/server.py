@@ -47,7 +47,6 @@ def createPost():
 	title = form_data.get('title')
 	content = form_data.get('content')
 	imageURL = form_data.get('imageURL')
-	imageURL = form_data.get('imageURL')
 	catagory = form_data.get('category')
 	user_id = 0
 	print(title, content, imageURL)
@@ -82,7 +81,6 @@ def get_reserved_items(user_id):
     if not user:
         return jsonify({'message': 'User not found'}), 404
 	
-
     reserved_items = Reservations.query.filter_by(user_id=user_id).all()
     print("BRUH", reserved_items)
     reserved_items_data = []
@@ -233,7 +231,10 @@ def uploadItem():
 	amount = int(form_data.get('amount'))
 	receipt = request.files['receipt']
 	description = ""
-	expiry_date = datetime.now()
+	print("Testingdsf asdas")
+	print(form_data.get("expiryDate"))
+
+	expiry_date = datetime.strptime(form_data.get("expiryDate"), '%Y-%m-%d')
 
 
 	receipt.save("image_cache/receipt.jpg")
