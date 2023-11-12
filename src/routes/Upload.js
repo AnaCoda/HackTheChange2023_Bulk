@@ -37,7 +37,7 @@ const Upload = () => {
     formData.append('amount', data.amount);
     formData.append('price', data.cost);
     formData.append('expiryDate', data.expiryDate);
-    formData.append('originalCost', data.originalCost);
+    formData.append('originalPrice', data.originalCost);
     formData.append('origin', data.origin);
 
     // Store the images in the state
@@ -161,6 +161,7 @@ const Upload = () => {
             <label className="block text-gray-700">Cost per Food</label>
             <input
               type="number"
+              step="0.01"
               {...register('cost', { required: true })}
               className="mt-1 px-4 py-2 rounded bg-gray-100 w-full"
             />
@@ -171,6 +172,7 @@ const Upload = () => {
             <label className="block text-gray-700">Original cost per Food</label>
             <input
               type="number"
+              step="0.01"
               {...register('originalCost', { required: true })}
               className="mt-1 px-4 py-2 rounded bg-gray-100 w-full"
             />

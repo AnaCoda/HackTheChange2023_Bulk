@@ -220,12 +220,16 @@ const Catalog = () => {
             alt={item.name}
             className="w-full object-cover shadow-sm rounded-lg p-3"
           />
+          { item.originalPrice &&
           <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-tr-md">
-            Discount
+            Discount: {((item.originalPrice - item.price).toFixed(2))} off!
           </div>
+          }
+        { item.origin &&
           <div className="absolute top-0 left-0 bg-zinc-900 text-white text-xs font-bold px-2 py-1">
-            Costco
+            {item.origin}
           </div>
+        }
         </div>
         <h2 className="text-lg mx-3 font-bold tracking-tight mb-1 p-1 text-gray-900">
           {item.name}
