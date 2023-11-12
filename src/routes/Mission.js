@@ -127,6 +127,9 @@ export default function Mission() {
                 <div className="text-lg font-bold mb-2">Money Saved</div>
                 <div className="border rounded-md border-grey-300 p-2">$20.05</div>
             </div>
+            <div className="p-3">
+                <div className="text-lg font-bold mb-2">Thank you for using BulkBuddies instead of throwing away your food!</div>
+            </div>
         </>
     )
 

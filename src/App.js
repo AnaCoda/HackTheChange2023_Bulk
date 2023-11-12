@@ -15,9 +15,9 @@ function App() {
       <nav className="flex justify-between items-center py-3">
         <Link to="/" title="home-page">
           <img
-            src={TheHatchText}
+            src="BulkBuddies-Text.png"
             alt="the-hatch-logo-text-only"
-            className="h-8"
+            className="h-8 ml-4"
           />
         </Link>
         <div className="flex space-x-12 mx-[10vh] items-center text-lg">

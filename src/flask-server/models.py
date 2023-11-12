@@ -76,27 +76,19 @@ def create_itemsForSale(*args, **kwargs):
         image = image_file.read()
     with open("sample_images/receipt.jpg", "rb") as image_file:
         receipt = image_file.read()
+    with open("sample_images/taiwanRamen.jpg", "rb") as image_file:
+        ramen = image_file.read()
+    with open("sample_images/potatoes.jpg", "rb") as image_file:
+        potatoes = image_file.read()
     db.session.add(ItemForSale(id=1, name="Costco Beef Chili Stew",
                                image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
-                               price=70, amount=3, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0)))
-    db.session.add(ItemForSale(id=2, name="Ramen Korean",
-                               image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
-                               price=7, amount=10, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0)))
-    db.session.add(ItemForSale(id=3, name="Chicken Steak",
-                               image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
-                               price=12, amount=5, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0)))
-    db.session.add(ItemForSale(id=4, name="Potato",
-                               image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
-                               price=80, amount=10, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0)))
-    db.session.add(ItemForSale(id=5, name="Costco Beef Chili Stew",
-                               image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
-                               price=20, amount=23, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0)))
-    db.session.add(ItemForSale(id=6, name="Costco Beef Chili Stew",
-                               image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
-                               price=50, amount=23, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0)))
-    db.session.add(ItemForSale(id=7, name="Costco Beef Chili Stew",
-                               image=image, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
-                               price=40, amount=23, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0)))
+                               price=2.00, amount=3, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0), origin="Costco"))
+    db.session.add(ItemForSale(id=2, name="Ramen Taiwanese",
+                               image=ramen, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
+                               price=1.50, amount=10, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0), origin="Walmart", originalPrice=2.00))
+    db.session.add(ItemForSale(id=4, name="Potatoes",
+                               image=potatoes, receipt=receipt,receipt_info="CAKN BROTA,5.99\nBLACK BEANS,6.79\nSWT SWEET POTATOES ONIONS,10.99\nGOLD POTATO,7.79\nMIXED PEPPER,6.59\nORGANIC CORN,5.79\nBEEF STEW,23.78\nFORX CHOPS APPLES,17.13\nORG. CARROTS,4.99\nAID CHKN SSG,13.99\nBABY FORMULA,17.99\nBNLS/SL BRST,29.09\nTHIGH MEAT,17.46\nFRZ. GAL ZIPR,12.59\nKS STEWEDTOM,5.99\n",
+                               price=2.50, amount=10, description="Yum", user_id=1, expiry_date=datetime(2023, 12, 25, 0, 0), origin="Costco"))
     db.session.commit()
 
 @event.listens_for(User.__table__, 'after_create')
