@@ -36,7 +36,10 @@ const Upload = () => {
     formData.append('name', data.foodName);
     formData.append('amount', data.amount);
     formData.append('price', data.cost);
-    
+    formData.append('expiryDate', data.expiryDate);
+    formData.append('originalCost', data.originalCost);
+    formData.append('origin', data.origin);
+
     // Store the images in the state
     setReceiptImage(data.receipt[0]);
     setProductImage(data.foodPicture[0]);
@@ -80,13 +83,23 @@ const Upload = () => {
       <div className="bg-white p-6 rounded shadow-lg w-1/4">
         <h2 className="text-2xl mb-4 text-green-600"><b>Delivery Instructions</b></h2>
         <ul>
-          <li>Upload the food you will drop off into our food center.</li>
-          <br></br>
-          <li>Provide accurate information and images of the product and receipt</li>
-          <br></br>
-          <li>If you have multiple items from a bulk purchase, indicate the amount you wish to sell and the price of each (total items price / individual item)</li>
-          <br></br>
-          <li>Deliver the items to the in-person center for credit receival 😀 </li>
+        To sell your food items on our app, please follow these steps:
+        <br></br>
+        <br></br>
+        - Take a photo of the product and the receipt and upload them to the app. Make sure the images are clear and show the details of the product and the purchase date.
+        <br></br>
+        <br></br>
+        - Enter the information about the product, such as the name, brand, weight, expiration date, etc.
+        <br></br>
+        <br></br>
+        - If you bought multiple items in bulk and want to sell them individually, enter the quantity you want to sell and the price per item. The price should be based on the total cost of the bulk purchase divided by the number of items.
+        <br></br>         
+        <br></br>
+        - Bring the items to our nearest food center and drop them off, perhaps from a trip back from grocery shopping. You will receive credit for your sale once we verify the items. 😊
+
+        <br></br>
+        <br></br>
+        - With credit, you can buy other's discounted bulk sale items
         </ul>
       </div>
 
@@ -125,7 +138,15 @@ const Upload = () => {
             />
             {errors.foodName && <p className="text-red-500">Please enter a food name</p>}
           </div>
-
+          <div className="mt-3">
+          <label className="block text-gray-700">Expiry Date</label>
+          <input
+            type="date"
+            {...register('expiryDate', { required: true })}
+            className="mt-1 px-4 py-2 rounded bg-gray-100 w-full"
+          />
+          {errors.expiryDate && <p className="text-red-500">Please enter the expiry date</p>}
+        </div>
           <div className="mt-3">
             <label className="block text-gray-700">Amount of Food</label>
             <input
@@ -144,6 +165,32 @@ const Upload = () => {
               className="mt-1 px-4 py-2 rounded bg-gray-100 w-full"
             />
             {errors.cost && <p className="text-red-500">Please enter the cost per food</p>}
+          </div>
+
+          <div className="mt-3">
+            <label className="block text-gray-700">Original cost per Food</label>
+            <input
+              type="number"
+              {...register('originalCost', { required: true })}
+              className="mt-1 px-4 py-2 rounded bg-gray-100 w-full"
+            />
+            {errors.cost && <p className="text-red-500">Please enter the original cost per food</p>}
+          </div>
+
+          <div className="mt-3">
+            <label className="block text-gray-700">Discounted Location</label>
+            <select
+              {...register('origin', { required: true })}
+              className="mt-1 px-4 py-2 rounded bg-gray-100 w-full"
+            >
+              <option value="">Select an option</option>
+              <option value="costco">Costco</option>
+              <option value="walmart">Walmart</option>
+              <option value="amazon">Amazon</option>
+              <option value="superstore">Superstore</option>
+              <option value="other">Other</option>
+            </select>
+            {errors.originalCost && <p className="text-red-500">Please select the discounted location</p>}
           </div>
 
           <button

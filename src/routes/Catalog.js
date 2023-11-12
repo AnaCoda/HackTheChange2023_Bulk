@@ -6,18 +6,27 @@ const Catalog = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [itemsWithPhotos, setItemsWithPhotos] = useState([]);
+  const [priceFilter, setPriceFilter] = useState([]);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+  const handlePriceFilterChange = (e) => {
+    const value = e.target.value;
+    if (priceFilter.includes(value)) {
+      setPriceFilter(priceFilter.filter((filter) => filter !== value));
+    } else {
+      setPriceFilter([...priceFilter, value]);
+    }
   };
-  const [value, setValue] = useState(20);
 
-  const handleInputChange = (e) => {
-    setValue(e.target.value);
+  const clearFilters = () => {
+    // Clear the selected filters
+    setPriceFilter([]);
+    setSearchTerm("");
+    // ... additional filter states
+  
+    // Perform any other necessary actions after clearing the filters
+    // For example, you might want to fetch updated data or update the UI
   };
- 
-
-
+  
 
   const handleAddClick = (id) => {
     setCounters((prevCounters) => ({
@@ -85,85 +94,158 @@ const Catalog = () => {
   return (
     <div className={`h-screen flex overflow-hidden white ${isOpen ? 'overflow-x-hidden' : ''}`}>
       {/* Sidebar */}
-      <div className={` bg-neutral-200 border shadow-xl rounded-md border-black p-2 w-64 flex-shrink-0 ${isOpen ? '' : 'hidden'}`}>
+      <div className={` bg-neutral-200 border shadow-xl rounded-md border-black w-64 flex-shrink-0 ${isOpen ? '' : 'hidden'}`}>
       
-        {/* Add your sidebar content here */}
-       
-        
-        <div className="rounded-lg p-2 mt-16" >
-          <div className="price-range p-4 text-zinc-800">
-            <span className="text-sm">$</span>
-            <span className="text-sm">{value}</span>
-            <input
-              className="w-full accent-slate-700"
-              type="range"
-              name=""
-              value={value}
-              min="0"
-              max="150"
-              onInput={(e) => (e.target.previousElementSibling.innerText = e.target.value)}
-              onChange={handleInputChange}
-            />
-        <div className="-mt-2 flex w-full justify-between text-zinc-800 ">
-          <span className="text-sm ">0</span>
-          <span className="text-sm ">150</span>
+       {/* Add your sidebar content here */}
+       <div className="flex justify-between mb-1 mt-4 px-5">
+            <div className="text-black font-bold flex-grow">Filters</div>
+            <div className="text-gray-500 underline font-bold cursor-pointer" onClick={clearFilters}>Clear All</div>
+        </div>
+       <div className="rounded-lg mt-2 flex justify-center w-full">
+        <div className="price-range mt-4 text-zinc-800 flex flex-col justify-center">
+        <div className="border-b border-4 border-black w-full rounded-xl"></div> {/* Line divider */}
+          <div className="rounded-lg p-2">
+            <div className="price-range py-2 text-zinc-800 flex flex-col justify-center w-full">
+              <p className="mb-2 font-bold">Price Range</p>
+            <div className="flex justify-between mb-2 flex-row">
+              <label className="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 rounded-full text-black"
+                  value="1-5"
+                  checked={priceFilter.includes("1-5")}
+                  onChange={handlePriceFilterChange}
+                />
+                <span className="ml-2 text-black">$1-5</span>
+              </label>
+            </div>
+            <div className="flex justify-between mb-2">
+              <label className="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 rounded-full text-black"
+                  value="6-25"
+                  checked={priceFilter.includes("6-25")}
+                  onChange={handlePriceFilterChange}
+                />
+                <span className="ml-2 text-black">$6-25</span>
+              </label>
+            </div>
+            <div className="flex justify-between mb-2">
+              <label className="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 rounded-full text-black"
+                  value="26-50"
+                  checked={priceFilter.includes("26-50")}
+                  onChange={handlePriceFilterChange}
+                />
+                <span className="ml-2 text-black">$26-50</span>
+              </label>
+            </div>
+            <div className="flex justify-between mb-2">
+              <label className="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 rounded-full text-black"
+                  value="50-100"
+                  checked={priceFilter.includes("50-100")}
+                  onChange={handlePriceFilterChange}
+                />
+                <span className="ml-2 text-black">$50-100</span>
+              </label>
+            </div>
+            <div className="flex justify-between">
+              <label className="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 rounded-full text-black"
+                  value="100+"
+                  checked={priceFilter.includes("100+")}
+                  onChange={handlePriceFilterChange}
+                />
+                <span className="ml-2 text-black">$100+</span>
+              </label>
+            </div>
+          </div>
         </div>
       </div>
-     
-
-    </div>
-
-
-
+      </div>
       </div>
       {/* Main Content */}
-      <div className="mt-2 flex justify-center items-center absolute">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="p-2 mt-4 mx-2 border border-gray-800 rounded-md shadow-sm"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mx-6 mt-4 mb-4">
-  {itemsWithPhotos.map((item) => (
-    // <div key={item.id} className="bg-neutral-100 p-3 rounded-md shadow-md overflow-hidden">
-    //   {/* Assuming 'item.image' is a base64 encoded image */}
-    //   <img src={`data:image/jpeg;base64,${item.image}`} alt={item.name} className="h-56 w-full object-cover rounded-lg p-3" />
-    //   <h3 className="text-base font-semibold">{item.name}</h3>
-    //   <p className="text-gray-600 overflow-hidden">{item.description}</p>
-    //   <p className="text-gray-600 overflow-hidden">{item.amount}</p>
-    //   <button className='p-2 text-base bg-gray-500 text-gray-50 shadow-sm rounded-md font-sans mt-3 hover:scale-105' onClick={() => handleReserveClick(item.id)}>Reserve</button>
-    //   <p className='inline bg-green-500 text-white text-sm font-sans p-2 ml-2 shadow-lg rounded-sm'>{counters[item.id] || 0}</p>
-    //   {/* ADD HERE ANY FOOD ITEMS OR DETAILS FROM BACKEND FOR USER VIEW */}
-    // </div>
-    <div  key={item.id}className="bg-gray-100 border border-black shadow-lg font-sans rounded-md p-3">
-        {/* Card content */}
-        <div className="relative h-56 w-full overflow-hidden rounded-t-lg">
-        <img
-          src={`data:image/jpeg;base64,${item.image}`}
-          alt={item.name}
-          className="h-56 w-full object-cover shadow-sm rounded-lg p-3"
-        />
-         
+      <div>
+        <div className="mt-2 flex justify-center items-center px-4">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="p-2 mt-4 w-full border border-gray-800 rounded-md shadow-sm"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-          <h2 className="text-lg mx-3 font-bold tracking-tight mb-1 p-1 text-gray-900">{item.name}
-          <span className='inline ml-2 text-blue-700 font-sans animate-pulse'>{item.amount}</span>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mx-6 mt-4 mb-4">
+      {/* Catalog items */}
+      {itemsWithPhotos
+        .filter((item) => {
+          // Check if the item's price matches any of the selected price filters
+          if (priceFilter.length === 0) {
+            // If no price filters are selected, show all items
+            return true;
+          } else {
+            return priceFilter.some((range) => {
+              const [min, max] = range.split("-");
+              return item.price >= parseInt(min) && item.price <= parseInt(max);
+            });
+          }
+        })
+    .filter((item) => {
+      // Check if the searchTerm is present in the item's word or title
+      if (!searchTerm) {
+        // If no searchTerm is provided, show all items
+        return true;
+      } else {
+        const searchTermLower = searchTerm.toLowerCase();
+        return (
+          (item.name && item.name.toLowerCase().includes(searchTermLower)) ||
+          (item.description && item.description.toLowerCase().includes(searchTermLower))
+        );
+      }
+    })
+    .map((item) => (
+      <div key={item.id} className="bg-gray-100 border border-black shadow-lg font-sans rounded-md p-3">
+        {/* Card content */}
+        <div className="relative w-full overflow-hidden rounded-t-lg">
+          <img
+            src={`data:image/jpeg;base64,${item.image}`}
+            alt={item.name}
+            className="w-full object-cover shadow-sm rounded-lg p-3"
+          />
+          <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-tr-md">
+            Discount
+          </div>
+          <div className="absolute top-0 left-0 bg-zinc-900 text-white text-xs font-bold px-2 py-1">
+            Costco
+          </div>
+        </div>
+        <h2 className="text-lg mx-3 font-bold tracking-tight mb-1 p-1 text-gray-900">
+          {item.name}
+          <span className="inline ml-2 text-blue-700 font-sans animate-pulse">{item.amount}</span>
         </h2>
         <div className="text-gray-900 p-1 mx-3 font-sans text-sm mb-3">Expiry: {item.expiry_date.slice(0, -12)}</div>
-        {/* <div className="text-gray-900 p-1 mx-3 mb-1 font-sans text-sm">Uploaded On:{item.date_posted}</div> */}
-          <button onClick={() => handleSubtractClick(item.id) } className='text-zinc-900 font-sans text-xl p-2 ml-3 hover:scale-150'>-
-          </button>
-          <p className='inline bg-slate-500 text-white text-base font-sans p-2 ml-2 shadow-sm rounded-full'>{counters[item.id] || 0}</p>
-          <button onClick={() => handleAddClick(item.id) } className='text-zinc-900 font-sans text-xl p-2 ml-3 hover:scale-150'>+
-          </button>
-       
-        {/* Add other properties here */}
-        <p className='inline justify-end items-end ml-5 font-sans text-lg'>${item.price}</p>
-        <button className=' bg-black ml-6 mt-2 hover:scale-110 text-base p-2 font-sans tracking-wider text-zinc-100 rounded-md shadow-sm'>RESERVE</button>
+        <button onClick={() => handleSubtractClick(item.id)} className="text-zinc-900 font-sans text-xl p-2 ml-3 hover:scale-150">-</button>
+        <p className="inline bg-slate-500 text-white text-base font-sans p-2 ml-2 shadow-sm rounded-full">{counters[item.id] || 0}</p>
+        <button onClick={() => handleAddClick(item.id)} className="text-zinc-900 font-sans text-xl p-2 ml-3 hover:scale-150">+</button>
+        <p className="inline justify-end items-end ml-5 font-sans text-lg">${item.price}</p>
+
+        {/* Reserve and Watch buttons */}
+        <div className="flex justify-between mt-4">
+          <button className="bg-black text-zinc-100 text-base font-sans tracking-wider rounded-md shadow-sm px-4 py-2 hover:scale-110">Reserve</button>
+          <button className="bg-gray-500 text-white text-base font-sans tracking-wider rounded-md shadow-sm px-4 py-2 hover:scale-110">Watch</button>
+        </div>
       </div>
-  ))}
+    ))}
+    </div>
+
 </div>
 
 

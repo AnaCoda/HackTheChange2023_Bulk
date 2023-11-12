@@ -186,6 +186,8 @@ def get_catalog_posts():
 		"receipt": base64.b64encode(post.receipt).decode('utf-8') if post.receipt else None,
 		"receipt_info": post.receipt_info,
 		"description": post.description,
+		"origin": post.origin,
+        "originalPrice": post.originalPrice, 
 		"date_posted": post.date_posted,
 		"expiry_date": post.expiry_date,
 		"user_id": post.user_id
@@ -228,10 +230,12 @@ def uploadItem():
 	name = form_data.get('name')
 	image = request.files['foodPicture'].read()
 	price = float(form_data.get('price'))
+	originalPrice = float(form_data.get('originalPrice'))
+	origin = form_data.get('origin')
 	amount = int(form_data.get('amount'))
 	receipt = request.files['receipt']
 	description = ""
-	print("Testingdsf asdas")
+
 	print(form_data.get("expiryDate"))
 
 	expiry_date = datetime.strptime(form_data.get("expiryDate"), '%Y-%m-%d')
@@ -250,6 +254,8 @@ def uploadItem():
 		name=name,
 		image=image,
 		price=price,
+        originalPrice=originalPrice,
+        origin=origin,
 		amount=amount,
 		receipt=request.files['receipt'].read(),
 		receipt_info = receiptInfo,
