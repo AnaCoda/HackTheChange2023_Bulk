@@ -208,7 +208,8 @@ def extract_item_and_price(receipt_info, user_input):
   user_input = user_input.upper().strip()
   matches = []
   for key in receipt_dict.keys():
-    ratio = difflib.SequenceMatcher(None, user_input, key).ratio()
+    ratio = difflib.SequenceMatcher(None, user_input, key.upper()).ratio()
+    print(user_input, key, ratio)
     if ratio >= 0.5:
       matches.append((key, ratio))
   matches.sort(key=lambda x: x[1], reverse=True)
