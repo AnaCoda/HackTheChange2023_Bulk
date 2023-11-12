@@ -2,6 +2,7 @@ import React from 'react';
 import picture from "./images/premium_photo-1664302148512-ddea30cd2a92.avif"
 import { FaDollarSign, FaUsers, FaLeaf } from 'react-icons/fa';
 import "./Home.css"
+import image from "./images/locations.png"
 
 const CenteredDiv = () => {
     return (
@@ -74,7 +75,21 @@ const CenteredDiv = () => {
       </div>
     );
   };
-  
+    
+  const LocationMap = () => {
+    return (
+      <div className="flex justify-center items-center p-3 mt-8">
+        <div className="w-2/3 h-auto border-l-4 p-4 rounded-2xl border-4 border-gray-700 flex flex-col justify-center items-center">
+        <div className="mt-2 text-center">
+            <p className="text-4xl p-2 mb-4">We are partnered with food banks across Canada</p>
+            <p className="text-xl p-1">Here are our Calgary locations:</p>
+        </div>
+
+          <img src={image} alt="Your Image" className="w-4/5 h-auto" />
+        </div>
+      </div>
+    );
+  };
 
 const HomePage = () => {
   return (
@@ -82,7 +97,8 @@ const HomePage = () => {
       <CenteredDiv />
       <MissionValues />
       <Timeline/>
-      <div className='p-10 w-full h-25'></div>
+      <LocationMap/>
+      <div className='p-10 w-full h-12'></div>
       <div className='p-10 w-full h-25 bg-yellow-100'></div>
     </div>
   );

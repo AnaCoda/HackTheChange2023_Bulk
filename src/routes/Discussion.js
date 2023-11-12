@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RiArrowRightSLine, RiPencilLine } from 'react-icons/ri';
+import { RiArrowRightSLine, RiPencilLine, RiInformationLine } from 'react-icons/ri';
+import Modal from 'react-modal';
 
 const DiscussionsPage = () => {
   const [posts, setPosts] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,11 +27,9 @@ const DiscussionsPage = () => {
 
   const filteredPosts = posts.filter(
     (post) =>
-    {
-        return (post.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      (post.title.toLowerCase().includes(searchText.toLowerCase()) ||
         post.description.toLowerCase().includes(searchText.toLowerCase())) &&
       (selectedCategory === '' || post.catagory === selectedCategory)
-    }
   );
 
   const handleSearchChange = (e) => {
@@ -48,13 +48,24 @@ const DiscussionsPage = () => {
     navigate(`/newPost`);
   };
 
+
+  const handleInfoClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-1 text-green-600">Welcome to the Discussions Page</h1>
+        <span className="text-green-500 cursor-pointer w-10" onClick={() => handleInfoClick()}>
+          <RiInformationLine />
+        </span>
         <i>
           <p className="mb-8">
-            Find out what people are looking for 🕵️‍♂️, what is on sale 💸, and connect with the community 🤝
+          Find out what people are looking for 🕵️‍♂️, what is on sale 💸, and connect with the community 🤝
           </p>
         </i>
         <div className="flex mb-4">
@@ -78,8 +89,10 @@ const DiscussionsPage = () => {
           />
         </div>
         {selectedCategory && (
-            <p className="text-gray-500 text-sm">{categories.find((category) => category.value === selectedCategory)?.description}</p>
-          )}
+          <p className="text-gray-500 text-sm">
+            {categories.find((category) => category.value === selectedCategory)?.description}
+          </p>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div
             className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:bg-green-100 flex items-center justify-center"
@@ -97,7 +110,9 @@ const DiscussionsPage = () => {
               className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:bg-green-100"
               onClick={() => handlePostClick(post.id)}
             >
-            {post.imageURL != "" && <img src={post.imageURL} alt={post.title} className="w-full h-40 object-cover mb-4 rounded-md" />}
+              {post.imageURL !== '' && (
+                <img src={post.imageURL} alt={post.title} className="w-full h-40 object-cover mb-4 rounded-md" />
+              )}
               <h2 className="text-xl font-bold mb-2 text-green-600">{post.title} - {post.catagory}</h2>
               <p className="text-gray-600">{post.content}</p>
               <div className="flex items-center mt-4">
@@ -106,10 +121,33 @@ const DiscussionsPage = () => {
                 </span>
                 <span className="text-green-500">Read More</span>
               </div>
+        
             </div>
           ))}
         </div>
       </div>
+
+      <Modal
+  isOpen={isModalOpen}
+  onRequestClose={() => closeModal()}
+  contentLabel="Approval Modal"
+  className="ReactModal__Content"
+  overlayClassName="ReactModal__Overlay"
+>
+  
+  <h2>Our discussion page</h2>
+  <p>By using our discussion page, you can:</p>
+  <ul>
+    <li>- Learn more about the food items that are available, such as their quantity, quality, expiry date, and location.</li>
+    <li>- Group orders and shoppings lists together!</li>
+    <li>- Give feedback and reviews on the food items and the users you interacted with.</li>
+    <li>- Share tips and ideas on how to use the food items in different recipes or dishes.</li>
+  </ul>
+  <p>Our discussion page is a great way to reduce food waste, save money, and enhance social interaction and trust. Join the conversation today and discover the benefits of sharing food with your community!</p>
+  <button className="yes" onClick={() => navigate('/catalog')}>Catalog</button>
+</Modal>
+
+
     </div>
   );
 };
