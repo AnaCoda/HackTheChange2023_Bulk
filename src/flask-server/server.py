@@ -112,11 +112,14 @@ def uploadItem():
 	description = ""
 	expiry_date = datetime.now()
 
+
 	receipt.save("image_cache/receipt.jpg")
 
 	receiptInfo = extractReceiptInformation()
 
 	receipt.stream.seek(0)
+	
+	suggested_item, suggested_price = extract_item_and_price(receiptInfo, name)
 
 	# USER ID IS CURRENTLY HARDCODED
 	item = ItemForSale(
@@ -132,7 +135,7 @@ def uploadItem():
 	)
 	db.session.add(item)
 	db.session.commit()
-	resp = jsonify(success=True)
+	resp = jsonify(success=True, suggested_item=suggested_item, suggested_price=suggested_price)
 	return resp
 
 def extractReceiptInformation():

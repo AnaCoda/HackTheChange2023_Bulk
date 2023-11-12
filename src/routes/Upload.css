@@ -1,0 +1,67 @@
+.ReactModal__Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .ReactModal__Content {
+    position: relative;
+    background-color: white;
+    padding: 20px;
+    border-radius: 4px;
+    width: 50%;
+    max-width: 500px;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.19), 0px 6px 6px rgba(0,0,0,0.23);
+  }
+  
+  .ReactModal__Content h2 {
+    font-size: 1.5em;
+    margin: 0 0 20px 0;
+  }
+  
+  .ReactModal__Content button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .ReactModal__Content button.yes {
+    background-color: #4CAF50; /* Green */
+    margin-right: 10px;
+  }
+  
+  .ReactModal__Content button.no {
+    background-color: #f44336; /* Red */
+  }
+  
+  .ReactModal__Content button:hover {
+    opacity: 0.8;
+  }
+
+  .ReactModal__Content .image-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .ReactModal__Content .image-container img {
+    max-width: 45%;
+    height: auto;
+    margin: 0 10px;
+  }
+  
+  .ReactModal__Content .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  

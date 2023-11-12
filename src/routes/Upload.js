@@ -1,8 +1,30 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
+
+import "./Upload.css"
 
 const Upload = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const [suggestedItem, setSuggestedItem] = React.useState(null);
+  const [suggestedPrice, setSuggestedPrice] = React.useState(null);
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
+  const [receiptImage, setReceiptImage] = React.useState(null);
+  const [productImage, setProductImage] = React.useState(null);
+
+  const [showForm, setShowForm] = React.useState(false);
+  const [correctItem, setCorrectItem] = React.useState('');
+  const navigate = useNavigate();
+
+
+  React.useEffect(() => {
+    console.log(suggestedPrice)
+    if (suggestedItem !== null && suggestedItem !== undefined && suggestedPrice !== null && suggestedPrice !== undefined) {
+      // Open the modal
+      setModalIsOpen(true);
+    }
+  }, [suggestedItem, suggestedPrice]);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -11,6 +33,10 @@ const Upload = () => {
     formData.append('name', data.foodName);
     formData.append('amount', data.amount);
     formData.append('price', data.cost);
+    
+    // Store the images in the state
+    setReceiptImage(data.receipt[0]);
+    setProductImage(data.foodPicture[0]);
 
     try {
       const response = await fetch('/uploadCatalogPost', {
@@ -20,6 +46,10 @@ const Upload = () => {
 
       if (response.ok) {
         console.log('Item uploaded successfully');
+        const responseData = await response.json();
+        console.log(responseData)
+        setSuggestedItem(responseData.suggested_item);
+        setSuggestedPrice(responseData.suggested_price);
       } else {
         console.log('Failed to upload item');
       }
@@ -27,6 +57,11 @@ const Upload = () => {
       console.log('Error:', error);
     }
   };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   return (
     <div className="inset-0 flex items-center justify-center space-x-4">
       <div className="bg-white p-6 rounded shadow-lg w-1/4">
@@ -106,7 +141,48 @@ const Upload = () => {
           </button>
         </form>
       </div>
+      <Modal
+      isOpen={modalIsOpen}
+      onRequestClose={closeModal}
+      contentLabel="Confirmation Modal"
+      className="ReactModal__Content"
+      overlayClassName="ReactModal__Overlay"
+    >
+      <h2>Is "{suggestedItem}" on your receipt for ${suggestedPrice} the correct corresponding item?</h2>
+      <div className="image-container">
+        {receiptImage ? <img src={URL.createObjectURL(receiptImage)} alt="Receipt" /> : null}
+        {productImage ? <img src={URL.createObjectURL(productImage)} alt="Product" /> : null}
+      </div>
+      <div className="button-container">
+        <button className="yes" onClick={() => {
+          closeModal();
+          navigate('/catalog');
+        }}>Yes</button>
+        <button className="no" onClick={() => {setShowForm(true)}}>No</button>
+      </div>
+      {showForm && (
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        console.log(`Correct item: ${correctItem}`);
+        setShowForm(false);
+        navigate('/catalog');
+        // You can add code here to handle the correct item
+      }}>
+        <label style={{ display: 'block', marginBottom: '10px' }}>
+          Please enter the correct receipt item and we will review your submission:
+          <input type="text" value={correctItem} onChange={(e) => setCorrectItem(e.target.value)} style={{ width: '100%', padding: '10px', marginTop: '5px', outline: '2px solid blue' }} />
+        </label>
+        <input type="submit" value="Submit"  style={{ display: 'block', margin: '10px auto' }} />
+      </form>
+      
+    )}
+
+
+    </Modal>
+
+
     </div>
+    
   );
 };
 
