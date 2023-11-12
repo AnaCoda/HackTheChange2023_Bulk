@@ -203,21 +203,31 @@ export default function Mission() {
     }
    
     const ReservedProductCards = reservedData.map((item, index) => (
-        <div key={index} className="flex border border-grey-300 rounded-md p-3">
-        <div className="flex flex-row w-1/5">
-            <img src={`data:image/jpeg;base64,${item.image}`} alt={item.name} className="w-36 h-36 object-cover border border-gray-300" />
+        <div key={index} className="flex border border-grey-300 rounded-md p-3 relative">
+            <div className="flex flex-row w-1/5">
+                <img src={`data:image/jpeg;base64,${item.image}`} alt={item.name} className="w-36 h-36 object-cover border border-gray-300" />
+            </div>
+        
+            <div className="flex justify-between flex-col w-2/5">
+                <div className="text-lg font-bold text-black">{item.name}</div>
+                <div className="text-md">${item.price}</div>
+            </div>
+        
+            <div className="flex flex-row w-2/5 items-end justify-end">
+                <div className="">Quantity: {item.reserved_amount}</div>
+            </div>
+
+            {index === 0 ? 
+                <div className="absolute top-0 right-0 bg-green-500 text-white text-m font-bold px-2 py-1">
+                    Ready for Pickup Within 7 Days
+                </div> :
+                <div className="absolute top-0 right-0 bg-red-500 text-white text-m font-bold px-2 py-1">
+                    Not Yet Ready For Pickup
+                </div>
+            }
         </div>
-    
-        <div className="flex justify-between flex-col w-2/5">
-            <div className="text-lg font-bold text-black">{item.name}</div>
-            <div className="text-md">${item.price}</div>
-        </div>
-    
-        <div className="flex flex-row w-2/5 items-end justify-end">
-            <div className="">Quantity: {item.reserved_amount}</div>
-        </div>
-        </div>
-    ));
+     ));
+     
      
     var DropOffsContent = (
         <>
