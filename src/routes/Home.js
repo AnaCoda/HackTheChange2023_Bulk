@@ -1,13 +1,14 @@
 import React from 'react';
 import picture from "./images/premium_photo-1664302148512-ddea30cd2a92.avif"
 import { FaDollarSign, FaUsers, FaLeaf } from 'react-icons/fa';
+import "./Home.css"
 
 const CenteredDiv = () => {
     return (
       <div className="flex justify-center bg-orange-100 py-10 gap-x-60">
         <div className="text-green-900 max-w-md">
           <h1 className="text-[340%] font-thin mb-4">Too much food? Too little food? Love saving money? </h1>
-          <p className="text-lg mb-4">Find out why ___ is the best platform for saving money on foods</p>
+          <p className="text-lg mb-4">Find out why BulkBuddies is the best platform for sustainably saving money on food.</p>
           <button className="bg-black text-white py-2 px-4 rounded-full">Sign up today</button>
         </div>
         <div className="flex justify-center">
@@ -24,17 +25,17 @@ const CenteredDiv = () => {
         <div className="rounded-lg bg-green-500 text-white p-4 flex flex-col items-center">
           <FaDollarSign className="text-4xl mb-2" />
           <h2 className="text-2xl font-bold mb-2">Pricing</h2>
-          <p>Value proposition for pricing</p>
+          <p>Save money by buying other people's excess bulk purchases, including member's only stores like Costco!</p>
         </div>
         <div className="rounded-lg bg-green-500 text-white p-4 flex flex-col items-center">
           <FaUsers className="text-4xl mb-2" />
           <h2 className="text-2xl font-bold mb-2">Community</h2>
-          <p>Value proposition for community</p>
+          <p>Drop off your own extra bulk food for others to enjoy (and earn in-store credit!).</p>
         </div>
         <div className="rounded-lg bg-green-500 text-white p-4 flex flex-col items-center">
           <FaLeaf className="text-4xl mb-2" />
           <h2 className="text-2xl font-bold mb-2">Sustainability</h2>
-          <p>Value proposition for sustainability</p>
+          <p>The perfect alternative to throwing food away, you can drop your extra purchases off for credits and use them anytime.</p>
         </div>
       </div>
     );
@@ -56,18 +57,18 @@ const CenteredDiv = () => {
             <span className="text-white text-2xl">3</span>
           </div>
         </div>
-        <div className="flex justify-center mt-4 relative mx-auto gap-10">
+        <div className="flex justify-center mt-4 gap-54 ml-6">
           <div className="flex flex-col items-center">
-            <div className="text-lg font-bold mb-2">Login</div>
-            <p>Step 1: Login to your </p>
+            <div className="text-lg font-bold mb-2">Join</div>
+            <p className="text-center">Step 1: Join BulkBuddies<br/>for free!</p>
           </div>
-          <div className="flex flex-col items-center ml-8">
-            <div className="text-lg font-bold mb-2">Search for items</div>
-            <p>Step 2: Search  on</p>
+          <div className="flex flex-col items-center">
+            <div className="text-lg font-bold mb-2">Earn Credit</div>
+            <p className="text-center">Step 2: Submit your excess<br/>food items and drop them off<br/>for BulkBuddies credit</p>
           </div>
-          <div className="flex flex-col items-center ml-8">
-            <div className="text-lg font-bold mb-2">Drop it off</div>
-            <p>Step 3: Drop off the </p>
+          <div className="flex flex-col items-center">
+            <div className="text-lg font-bold mb-2">Use Credit</div>
+            <p className="text-center">Step 3: Reserve other<br/>BulkBuddies' items<br/>and pick up when you're ready</p>
           </div>
         </div>
       </div>
