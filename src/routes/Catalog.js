@@ -4,6 +4,8 @@ const Catalog = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [counters, setCounters] = useState({});
   const [isOpen, setIsOpen] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [itemsWithPhotos, setItemsWithPhotos] = useState([]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -13,17 +15,17 @@ const Catalog = () => {
   const handleInputChange = (e) => {
     setValue(e.target.value);
   };
-  const dummyData = [
-    { id: 1, title: '$15.97', imageUrl: 'https://source.unsplash.com/Hz4FAtKSLKo' },
-    { id: 2, title: '$20.90', imageUrl: 'https://source.unsplash.com/8RaUEd8zD-U' },
-    { id: 3, title: '$7.98', imageUrl: 'https://via.placeholder.com/300' },
-    { id: 4, title: '$7.98', imageUrl: 'https://source.unsplash.com/8RaUEd8zD-U' },
-    { id: 5, title: '$7.98', imageUrl: 'https://source.unsplash.com/cTTLTD5zsPA' },
-    { id: 6, title: '$7.98', imageUrl: 'https://source.unsplash.com/8RaUEd8zD-U' },
-    { id: 7, title: '$7.98', imageUrl: 'https://source.unsplash.com/cTTLTD5zsPA' },
-    { id: 8, title: '$7.98', imageUrl: 'https://source.unsplash.com/cTTLTD5zsPA' },
-    // Add more dummy data as needed
-  ];
+  // const dummyData = [
+  //   { id: 1, title: '$15.97', imageUrl: 'https://source.unsplash.com/Hz4FAtKSLKo' },
+  //   { id: 2, title: '$20.90', imageUrl: 'https://source.unsplash.com/8RaUEd8zD-U' },
+  //   { id: 3, title: '$7.98', imageUrl: 'https://via.placeholder.com/300' },
+  //   { id: 4, title: '$7.98', imageUrl: 'https://source.unsplash.com/8RaUEd8zD-U' },
+  //   { id: 5, title: '$7.98', imageUrl: 'https://source.unsplash.com/cTTLTD5zsPA' },
+  //   { id: 6, title: '$7.98', imageUrl: 'https://source.unsplash.com/8RaUEd8zD-U' },
+  //   { id: 7, title: '$7.98', imageUrl: 'https://source.unsplash.com/cTTLTD5zsPA' },
+  //   { id: 8, title: '$7.98', imageUrl: 'https://source.unsplash.com/cTTLTD5zsPA' },
+  //   // Add more dummy data as needed
+  // ];
 
 
 
@@ -34,6 +36,36 @@ const Catalog = () => {
       [id]: (prevCounters[id] || 0) + 1,
     }));
   };
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/catalogPosts', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data);
+        setItemsWithPhotos(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [searchTerm]);
+
+
 
   return (
     <div className={`h-screen flex overflow-hidden white ${isOpen ? 'overflow-x-hidden' : ''}`}>
@@ -68,11 +100,6 @@ const Catalog = () => {
 
     </div>
       </div>
-
-
-
-
-
       {/* Main Content */}
       <div className="mb-4 flex justify-center items-center absolute">
         <input
@@ -84,18 +111,42 @@ const Catalog = () => {
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mx-6 mt-4 mb-4">
-    {dummyData.map((card) => (
-      <div key={card.id} className="bg-neutral-100 p-3 rounded-md shadow-md overflow-hidden">
-        <img src={card.imageUrl} alt={card.title} className="h-56 w-full object-cover rounded-lg p-3" />
-        <h3 className="text-base font-semibold">{card.title}</h3>
-        <p className="text-gray-600 overflow-hidden">[Title]</p>
-        <p className="text-gray-600 overflow-hidden">[Weight]</p>
-        <button className='p-2 text-base bg-gray-500 text-gray-50 shadow-sm rounded-md font-sans mt-3 hover:scale-105' onClick={() => handleReserveClick(card.id)}>Reserve</button>
-        <p className=' inline bg-green-500 text-white text-sm font-sans p-2 ml-2 shadow-lg rounded-sm'>{counters[card.id] || 0}</p>
-        {/* ADD HERE ANY FOOD ITEMS OR DETAILS FROM BACKEND FOR USER VIEW*/}
+  {itemsWithPhotos.map((item) => (
+    // <div key={item.id} className="bg-neutral-100 p-3 rounded-md shadow-md overflow-hidden">
+    //   {/* Assuming 'item.image' is a base64 encoded image */}
+    //   <img src={`data:image/jpeg;base64,${item.image}`} alt={item.name} className="h-56 w-full object-cover rounded-lg p-3" />
+    //   <h3 className="text-base font-semibold">{item.name}</h3>
+    //   <p className="text-gray-600 overflow-hidden">{item.description}</p>
+    //   <p className="text-gray-600 overflow-hidden">{item.amount}</p>
+    //   <button className='p-2 text-base bg-gray-500 text-gray-50 shadow-sm rounded-md font-sans mt-3 hover:scale-105' onClick={() => handleReserveClick(item.id)}>Reserve</button>
+    //   <p className='inline bg-green-500 text-white text-sm font-sans p-2 ml-2 shadow-lg rounded-sm'>{counters[item.id] || 0}</p>
+    //   {/* ADD HERE ANY FOOD ITEMS OR DETAILS FROM BACKEND FOR USER VIEW */}
+    // </div>
+    <div  key={item.id}className="bg-neutral-100 border border-black shadow-xl font-sans rounded-md p-3">
+        {/* Card content */}
+        <div className="relative h-56 w-full overflow-hidden rounded-t-lg">
+        <img
+        src={`data:image/jpeg;base64,${item.image}`}
+        alt={item.name}
+        className="h-56 w-full object-cover shadow-sm rounded-lg p-3"
+        />
+         
+        </div>
+          <h2 className="text-lg mx-3 font-bold tracking-tight mb-1 p-1 text-gray-900">{item.name}
+          <span className='inline ml-2 text-black font-sans'>{item.amount}</span>
+        </h2>
+        <div className="text-gray-900 p-1 mx-3 font-sans text-sm">Expiry:{item.expiry_date}</div>
+        {/* <div className="text-gray-900 p-1 mx-3 mb-1 font-sans text-sm">Uploaded On:{item.date_posted}</div> */}
+          <button onClick={() => handleReserveClick(item.id) } className='text-zinc-900 font-sans text-lg border-white p-2 ml-3'>+
+          </button>
+        <p className='inline bg-gray-800 text-white text-sm font-sans p-2 ml-2 shadow-sm'>{counters[item.id] || 0}</p>
+        {/* Add other properties here */}
       </div>
-    ))}
+  ))}
 </div>
+
+
+
 
     </div>
   );
