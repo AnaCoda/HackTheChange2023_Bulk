@@ -82,6 +82,14 @@ def create_users(*args, **kwargs):
     db.session.add(User(id=1, firstName = "asd", lastName = "asdasds", email= "sadsa", password="asd", credits=5))
     db.session.commit()
 
+@event.listens_for(Reservations.__table__, 'after_create')
+def create_reservations(*args, **kwargs):
+    default_item = ItemForSale.query.get(1) # Assuming the default item has id 1
+    if default_item:
+       db.session.add(Reservations(user_id=1, itemForSale=default_item, reservedAmount=1)) # Assuming the default user has id 1
+       db.session.commit()
+    db.session.commit()
+
 user_schema = UsersShema()
 users_schema = UsersShema(many=True)
 
