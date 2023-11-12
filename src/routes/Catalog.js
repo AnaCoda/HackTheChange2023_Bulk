@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Modal from 'react-modal';
 
 const Catalog = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -8,7 +9,7 @@ const Catalog = () => {
   const [itemsWithPhotos, setItemsWithPhotos] = useState([]);
   const [priceFilter, setPriceFilter] = useState([]);
 
-  const [modelIsOpen, setModelIsOpen] = useState([]);
+  const [modelIsOpen, setModelIsOpen] = useState(false);
   const handlePriceFilterChange = (e) => {
     const value = e.target.value;
     if (priceFilter.includes(value)) {
@@ -76,7 +77,7 @@ const Catalog = () => {
   }, [searchTerm]);
 
   const handleReserveItem = async (itemId, itemName, reservedAmount) => {
-    
+    if (reservedAmount == null || reservedAmount <= 0) return;
     // Create a copy of the form data to log it without interfering with the original
     const formDataCopy = new FormData();
     formDataCopy.append('user_id', 1);
@@ -292,7 +293,7 @@ const Catalog = () => {
        
         {/* Add other properties here */}
         <p className='inline justify-end items-end ml-5 font-sans font-bold text-blue-600 text-lg'>${item.price}</p>
-        <button onClick={() => handleReserveItem(item.id, item.name, counters)}
+        <button onClick={() => handleReserveItem(item.id, item.name, counters[item.id])}
  className=' text-gray-700 border-2  hover:text-gray-900 border-black ml-6 mt-2 hover:scale-110 text-sm p-2 font-mono tracking-tighter rounded-md shadow-sm'>Reserve</button>
 
 <button
@@ -304,7 +305,16 @@ const Catalog = () => {
 
 </div>
 
-
+  <Modal
+      isOpen={modelIsOpen}
+      onRequestClose={() => setModelIsOpen(false)}
+      contentLabel="Approval Modal"
+      className="ReactModal__Content"
+      overlayClassName="ReactModal__Overlay"
+    >
+      <h2>You have now reserved an item. Please stay notified if your item is ready for pickup. Thank you for reducing food wastes and saving the world!</h2>
+      <button className="yes" onClick={() => closeModel()}>Awesome!</button>
+    </Modal>
 
 
     </div>
