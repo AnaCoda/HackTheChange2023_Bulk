@@ -205,7 +205,7 @@ def get_reservations():
 @app.route("/reservations", methods=["POST"], strict_slashes=False)
 def add_reservation():
 	form_data = request.form
-	user_id = 0
+	user_id = 1
 	itemForSale_id = form_data['itemForSale_id']
 	itemForSale = ItemForSale.query.get(itemForSale_id)
 	reserved_amount = form_data['reserved_amount']

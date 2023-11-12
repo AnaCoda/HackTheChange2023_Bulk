@@ -312,7 +312,7 @@ const Catalog = () => {
       className="ReactModal__Content"
       overlayClassName="ReactModal__Overlay"
     >
-      <h2>You have now reserved an item. Please stay notified if your item is ready for pickup. Thank you for reducing food wastes and saving the world!</h2>
+      <h2>You have now reserved an item. We'll notify you when your item is ready for pickup. Thank you for reducing food wastes and saving the world!</h2>
       <button className="yes" onClick={() => closeModel()}>Awesome!</button>
     </Modal>
 
