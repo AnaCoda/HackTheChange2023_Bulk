@@ -253,12 +253,21 @@ const Catalog = () => {
     <div  key={item.id}className=" bg-gray-100 border border-black shadow-lg font-sans rounded-md p-4">
         {/* Card content */}
         <div className="relative w-full overflow-hidden rounded-t-lg">
-        <img
-          src={`data:image/jpeg;base64,${item.image}`}
-          alt={item.name}
-          className="h-56 w-full object-cover shadow-sm rounded-lg p-3"
-        />
-         
+          <img
+            src={`data:image/jpeg;base64,${item.image}`}
+            alt={item.name}
+            className="w-full object-cover shadow-sm rounded-lg p-3"
+          />
+          { item.originalPrice &&
+          <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-tr-md">
+            Discount: {((item.originalPrice - item.price).toFixed(2))} off!
+          </div>
+          }
+        { item.origin &&
+          <div className="absolute top-0 left-0 bg-zinc-900 text-white text-xs font-bold px-2 py-1">
+            {item.origin}
+          </div>
+        }
         </div>
           <h2 className="text-lg mx-3 font-bold tracking-tight mb-1 p-1 text-gray-900">{item.name}
           <span className='inline ml-2 text-blue-700 font-sans animate-pulse'>{item.amount}</span>
