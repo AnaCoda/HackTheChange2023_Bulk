@@ -8,6 +8,7 @@ const PostPage = () => {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -15,11 +16,17 @@ const PostPage = () => {
         .then((response) => response.json())
         .then((data) => {
           setPost(data);
-          setIsLoading(false);
-          console.log(data)
+          fetch(`/user/${data.post.user_id}`)
+            .then((response) => response.json())
+            .then((userData) => {
+              if(userData.firstName || userData.lastName) setUserName(`${userData.firstName} ${userData.lastName}`);
+            })
+            .catch((error) => console.error(error));
+            setIsLoading(false);
+
         })
         .catch((error) => console.error(error));
-    }, 0);
+    }, 1);
   }, [id]);
 
   const handleCommentChange = (e) => {
@@ -47,7 +54,7 @@ const PostPage = () => {
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-4">
           <h1 className="text-3xl font-bold mb-4">{post.post.title}</h1>
-          <p className="text-gray-600">Post ID: {id}</p>
+          <p className="text-gray-600">By: {userName != "" ? userName : "unnamed"} on {new Date(post.post.created_at).toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})}</p>
           <div className="mt-8">
             <div className="flex justify-center">
               <img src={post.post.imageURL} className='h-40 object-cover mb-4 rounded-md bg-center'></img>

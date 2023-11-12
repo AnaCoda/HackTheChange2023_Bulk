@@ -30,11 +30,11 @@ function App() {
           <Link to="/Profile" className="hover:text-gray-600 text-gray-800">
             <b>Profile</b>
           </Link>
+          <Link to="/Catalog" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-base">
+            <b>Marketplace</b>
+          </Link>
           <Link to="/upload" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-base">
             <b>Drop off Food</b>
-          </Link>
-          <Link to="/Catalog" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-base">
-            <b>Catalog</b>
           </Link>
         </div>
       </nav>

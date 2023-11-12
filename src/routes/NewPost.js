@@ -6,22 +6,23 @@ const NewPostPage = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const navigate = useNavigate();
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
-    console.log(title)
   };
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
-    console.log(description)
   };
 
   const handleImageUrlChange = (e) => {
     setImageUrl(e.target.value);
-    console.log(imageUrl)
+  };
 
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
   };
 
   const handleSubmit = async (e) => {
@@ -30,13 +31,14 @@ const NewPostPage = () => {
     formData.append('title', title);
     formData.append('content', description);
     formData.append('imageURL', imageUrl);
+    formData.append('category', selectedCategory);
 
     try {
       const response = await fetch('/posts', {
         method: 'POST',
         body: formData,
       });
-  
+
       if (response.ok) {
         console.log('Post created successfully');
         navigate('/Discussion');
@@ -47,9 +49,15 @@ const NewPostPage = () => {
       console.log('Error:', error);
     }
   };
-  
+
+  const categories = [
+    { value: 'sales', label: 'Sales' },
+    { value: 'social', label: 'Social' },
+    { value: 'shopping list', label: 'Shopping List' },
+  ];
+
   return (
-    <div className="min-h-screen py-8 mt-12">
+    <div className="min-h-screen py-8 mt-1">
       <div className="max-w-4xl mx-auto flex justify-center items-center">
         <div className="mr-8">
           <div className="flex justify-center items-center h-96">
@@ -94,8 +102,26 @@ const NewPostPage = () => {
                 value={imageUrl}
                 onChange={handleImageUrlChange}
                 className="border border-green-500 rounded-md px-4 py-2 w-96"
-                required
               />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="category" className="block text-gray-700 font-bold mb-2">
+                Category
+              </label>
+              <select
+                id="category"
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                className="border border-green-500 rounded-md px-4 py-2 w-96"
+                required
+              >
+                <option value="">Select a category</option>
+                {categories.map((category) => (
+                  <option key={category.value} value={category.value}>
+                    {category.label}
+                  </option>
+                ))}
+              </select>
             </div>
             <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
               Submit

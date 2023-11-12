@@ -25,6 +25,14 @@ def users():
 
 	return jsonify(results)
 
+@app.route('/user/<int:user_id>', methods=['GET'])
+def getUserName(user_id):
+    user = User.query.get(user_id)
+    if user:
+        return jsonify({'firstName': user.firstName, 'lastName': user.lastName})
+    else:
+        return jsonify({'error': 'User not found'}), 404
+
 @app.route("/user", methods=["GET"], strict_slashes=False)
 def user():
 	user = User.query.first()
@@ -39,10 +47,12 @@ def createPost():
 	title = form_data.get('title')
 	content = form_data.get('content')
 	imageURL = form_data.get('imageURL')
+	imageURL = form_data.get('imageURL')
+	catagory = form_data.get('category')
 	user_id = 0
 	print(title, content, imageURL)
 
-	post = Post(title=title, content=content, imageURL=imageURL, user_id=user_id)
+	post = Post(title=title, content=content, imageURL=imageURL, user_id=user_id,catagory=catagory)
 	db.session.add(post)
 	db.session.commit()
 
@@ -59,6 +69,7 @@ def getPosts():
 			'content': post.content,
 			'imageURL': post.imageURL,
 			'user_id': post.user_id,
+			'catagory': post.catagory,
 			'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S')
 		}
 		post_list.append(post_data)
