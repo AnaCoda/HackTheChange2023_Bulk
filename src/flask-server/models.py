@@ -102,7 +102,7 @@ def create_itemsForSale(*args, **kwargs):
 @event.listens_for(User.__table__, 'after_create')
 def create_users(*args, **kwargs):
     
-    db.session.add(User(id=1, firstName = "asd", lastName = "asdasds", email= "sadsa", password="asd", credits=5))
+    db.session.add(User(id=1, firstName = "Eleanor", lastName = "Rigby", email= "erigby@gmail.com", password="asd", credits=5))
     db.session.commit()
 
 @event.listens_for(Reservations.__table__, 'after_create')

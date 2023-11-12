@@ -40,9 +40,9 @@ export default function Mission() {
     var Profile = (
         <>
             <div className="flex flex-col items-center pb-4">
-                <img src="5856.jpg" alt="Profile Pic" className="rounded-full w-32 h-32 object-cover mb-4 border border-gray-300"/>
-                <h2 className="text-lg font-semibold mb-2">{userEmail}</h2>
-                <p className="text-sm text-gray-600">{userFName + userLName}</p>
+                <img src="eleanorProfile.jpg" alt="Profile Pic" className="rounded-full w-32 h-32 object-cover mb-4 border border-gray-300"/>
+                <h2 className="text-lg font-semibold mb-2">{userFName + " " + userLName}</h2>
+                <p className="text-sm text-gray-600">{userEmail}</p>
             </div>
         </>
     )
@@ -52,7 +52,7 @@ export default function Mission() {
             <div className="flex flex-row justify-center border rounded-lg w-3/5 p-2 border-gray-300 gap-3 items-center mx-auto">
                 <div className="text-center">
                     <p className="text-sm text-gray-600">Spent</p>
-                    <p className="text-m font-bold text-black">$45.28</p>
+                    <p className="text-m font-bold text-black">$46.83</p>
                 </div>
                 <div className="text-center">
                     <p className="text-sm text-gray-600">Member Since</p>
@@ -60,7 +60,7 @@ export default function Mission() {
                 </div>
                 <div className="text-center">
                     <p className="text-sm text-gray-600">Traded</p>
-                    <p className="text-m font-bold text-black">$31.24</p>
+                    <p className="text-m font-bold text-black">$181.24</p>
                 </div>
             </div>
         </>
@@ -125,7 +125,7 @@ export default function Mission() {
                 <div className="border rounded-md border-grey-300 p-2">$134.41</div>
             </div><div className="p-3">
                 <div className="text-lg font-bold mb-2">Money Saved</div>
-                <div className="border rounded-md border-grey-300 p-2">$40.05</div>
+                <div className="border rounded-md border-grey-300 p-2">$20.05</div>
             </div>
         </>
     )
