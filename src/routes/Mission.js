@@ -123,6 +123,9 @@ export default function Mission() {
             <div className="p-3">
                 <div className="text-lg font-bold mb-2">Credit Balance</div>
                 <div className="border rounded-md border-grey-300 p-2">$134.41</div>
+            </div><div className="p-3">
+                <div className="text-lg font-bold mb-2">Money Saved</div>
+                <div className="border rounded-md border-grey-300 p-2">$40.05</div>
             </div>
         </>
     )
@@ -135,17 +138,38 @@ export default function Mission() {
         <>
             <div className="flex border border-grey-300 rounded-md p-3 items-center">
                 <div className="flex flex-row w-1/5">
-                    <img src="5856.jpg" alt="Profile Pic" className=" w-36 h-36 object-cover border border-gray-300"/>
+                    <img src="bathtissue.webp" alt="Profile Pic" className=" w-36 h-36 object-cover border border-gray-300"/>
 
                 </div>
 
                 <div className="flex justify-between flex-col w-2/5">
-                    <div className="text-lg font-bold text-black">Product Name</div>
-                    <div className="text-md">$23.23</div>
+                    <div className="text-lg font-bold text-black">Bath Tissue</div>
+                    <div className="text-md">$21.23</div>
 
                 </div>
                 <div className="flex flex-row w-2/5 items-end justify-end">
-                    <div className="">Quantity: 2</div>
+                    <div className="">Quantity: 17</div>
+                </div>
+                
+            </div>
+        </>
+    )
+
+    var ProductCard2 = (
+        <>
+            <div className="flex border border-grey-300 rounded-md p-3 items-center">
+                <div className="flex flex-row w-1/5">
+                    <img src="cheetos.webp" alt="Profile Pic" className=" w-36 h-36 object-cover border border-gray-300"/>
+
+                </div>
+
+                <div className="flex justify-between flex-col w-2/5">
+                    <div className="text-lg font-bold text-black">Cheetos Variety Pack</div>
+                    <div className="text-md">$6.49</div>
+
+                </div>
+                <div className="flex flex-row w-2/5 items-end justify-end">
+                    <div className="">Quantity: 12</div>
                 </div>
                 
             </div>
@@ -200,11 +224,6 @@ export default function Mission() {
             <div className="p-3">
                 <div className="text-lg font-bold mb-2">Products You Dropped Off</div>
                 {ProductCard}
-                {ProductCard}
-                {ProductCard}
-                {ProductCard}
-
-
             </div>
         </>
     )
@@ -212,11 +231,7 @@ export default function Mission() {
         <>
              <div className="p-3">
                 <div className="text-lg font-bold mb-2">Products You Purchased</div>
-                {ProductCard}
-                {ProductCard}
-                {ProductCard}
-                {ProductCard}
-
+                {ProductCard2}
             </div>
         </>
     )
