@@ -20,7 +20,7 @@ const CenteredDiv = () => {
 
   const MissionValues = () => {
     return (
-      <div className="grid grid-cols-3 gap-8 mt-10 p-10">
+      <div className="grid grid-cols-3 gap-8 mt-16 p-10">
         <div className="rounded-lg bg-green-500 text-white p-4 flex flex-col items-center">
           <FaDollarSign className="text-4xl mb-2" />
           <h2 className="text-2xl font-bold mb-2">Pricing</h2>
@@ -42,7 +42,7 @@ const CenteredDiv = () => {
 
   const Timeline = () => {
     return (
-      <div className="flex justify-center items-center mt-10 flex-col">
+      <div className="flex justify-center items-center mt-16 flex-col bg-gray-800 p-16 text-white">
         <div className="flex items-center">
           <div className="w-16 h-16 bg-green-500 rounded-full flex justify-center items-center">
             <span className="text-white text-2xl">1</span>
@@ -81,6 +81,8 @@ const HomePage = () => {
       <CenteredDiv />
       <MissionValues />
       <Timeline/>
+      <div className='p-10 w-full h-25'></div>
+      <div className='p-10 w-full h-25 bg-yellow-100'></div>
     </div>
   );
 };
